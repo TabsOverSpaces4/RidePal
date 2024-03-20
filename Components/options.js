@@ -4,10 +4,10 @@ import {
   StyleSheet,
   Modal,
   TextInput,
-  Button as RNButton,
   Text,
+  TouchableOpacity,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker"; // Corrected import
+import { Picker } from "@react-native-picker/picker";
 import { Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
@@ -35,34 +35,33 @@ const ButtonContainer = () => {
     toggleJoinRideModal();
     console.log("Join Ride Pressed");
   };
+
   const handlePlanRide = () => {
     console.log("User is trying to plan a ride");
-	toggleNewRideModal();
-    navigation.navigate("Form"); // Navigate to the form page
+    toggleNewRideModal();
+    navigation.navigate("Plan Your Ride");
   };
 
   return (
     <View style={styles.container}>
-      <Button
-        mode="contained"
+      <TouchableOpacity
+        style={[styles.button, styles.newRideButton]}
         onPress={handleNewRidePress}
-        style={styles.button}
       >
-        New Ride
-      </Button>
-      <Button
-        mode="contained"
+        <Text style={styles.buttonText}>New Ride</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, styles.joinRideButton]}
         onPress={handleJoinRidePress}
-        style={styles.button}
       >
-        Join Ride
-      </Button>
+        <Text style={styles.buttonText}>Join Ride</Text>
+      </TouchableOpacity>
 
       {/* Modal for New Ride */}
       <Modal visible={isNewRideModalVisible} transparent animationType="slide">
         <View style={modalStyles.centeredView}>
           <View style={modalStyles.modalView}>
-            <Text style={modalStyles.modalTitle}>Enter New Ride Details</Text>
+            <Text style={modalStyles.modalTitle}>New Ride!</Text>
             <Text style={modalStyles.modalLabel}>Ride Name:</Text>
             <TextInput
               style={modalStyles.input}
@@ -87,8 +86,18 @@ const ButtonContainer = () => {
               ))}
             </Picker>
             <View style={modalStyles.buttonContainer}>
-              <RNButton title="Plan Ride" onPress={handlePlanRide} />
-              <RNButton title="Cancel" onPress={toggleNewRideModal} />
+              <TouchableOpacity
+                style={modalStyles.modalButton}
+                onPress={handlePlanRide}
+              >
+                <Text style={modalStyles.modalButtonText}>Plan Ride</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={modalStyles.modalButton}
+                onPress={toggleNewRideModal}
+              >
+                <Text style={modalStyles.modalButtonText}>Cancel</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -116,8 +125,18 @@ const ButtonContainer = () => {
               value={inputValue}
             />
             <View style={modalStyles.buttonContainer}>
-              <RNButton title="Join Ride" onPress={toggleJoinRideModal} />
-              <RNButton title="Cancel" onPress={toggleJoinRideModal} />
+              <TouchableOpacity
+                style={modalStyles.modalButton}
+                onPress={toggleJoinRideModal}
+              >
+                <Text style={modalStyles.modalButtonText}>Join Ride</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={modalStyles.modalButton}
+                onPress={toggleJoinRideModal}
+              >
+                <Text style={modalStyles.modalButtonText}>Cancel</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -172,7 +191,18 @@ const modalStyles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    width: "100%",
+    width: "80%",
+    justifyContent: "space-between",
+  },
+  modalButton: {
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: "#7397c9",
+  },
+  modalButtonText: {
+    color: "white",
+    fontWeight: "bold",
   },
 });
 
@@ -188,14 +218,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "#37475c",
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
   button: {
     borderRadius: 20,
-    paddingHorizontal: 10,
-    opacity: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  newRideButton: {
+    backgroundColor: "#1abc9c",
+  },
+  joinRideButton: {
+    backgroundColor: "#3498db",
   },
 });
 

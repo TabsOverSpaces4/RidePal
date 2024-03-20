@@ -15,8 +15,9 @@ const MyNavigator = () => {
 		options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Form"
-        component={FormPage} // Replace with your form component
+        name="Plan Your Ride"
+        component={FormPage} 
+		options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
