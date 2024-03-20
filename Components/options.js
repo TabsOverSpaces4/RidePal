@@ -9,8 +9,10 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker"; // Corrected import
 import { Button } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 const ButtonContainer = () => {
+  const navigation = useNavigation();
   const [isNewRideModalVisible, setIsNewRideModalVisible] = useState(false);
   const [isJoinRideModalVisible, setIsJoinRideModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -32,6 +34,11 @@ const ButtonContainer = () => {
   const handleJoinRidePress = () => {
     toggleJoinRideModal();
     console.log("Join Ride Pressed");
+  };
+  const handlePlanRide = () => {
+    console.log("User is trying to plan a ride");
+	toggleNewRideModal();
+    navigation.navigate("Form"); // Navigate to the form page
   };
 
   return (
@@ -80,9 +87,7 @@ const ButtonContainer = () => {
               ))}
             </Picker>
             <View style={modalStyles.buttonContainer}>
-              <RNButton title="Plan Ride" onPress={() => {
-				console.log('User is trying to plan a ride')
-			  } } />
+              <RNButton title="Plan Ride" onPress={handlePlanRide} />
               <RNButton title="Cancel" onPress={toggleNewRideModal} />
             </View>
           </View>

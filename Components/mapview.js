@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MapView, { Marker } from "react-native-maps";
+import ButtonContainer from "./options";
 
 import { StyleSheet, View } from "react-native";
 
@@ -23,6 +24,7 @@ export default function MapViewComponent() {
       >
         <Marker coordinate={desiredCoordinates} title={markerTitle} />
       </MapView>
+	  <ButtonContainer/>
     </View>
   );
 }
