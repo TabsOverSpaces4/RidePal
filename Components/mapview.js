@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import ButtonContainer from "./options";
-
 import { StyleSheet, View } from "react-native";
+import RideList from "./Scheduled";
 
 export default function MapViewComponent() {
   const desiredCoordinates = { latitude: 12.934443, longitude: 77.682991 };
@@ -89,6 +89,31 @@ export default function MapViewComponent() {
     },
   ];
 
+  const rides = [
+    {
+      id: 1,
+      name: "Ride 1",
+      startTime: "10:00 AM",
+      startingPoint: "Point A",
+      destination: "Point B",
+    },
+    {
+      id: 2,
+      name: "Ride 2",
+      startTime: "11:00 AM",
+      startingPoint: "Point C",
+      destination: "Point D",
+    },
+	{
+		id: 3,
+		name: "Ride 3",
+		startTime: "11:00 AM",
+		startingPoint: "Point C",
+		destination: "Point D",
+	  },
+    // Add more ride objects as needed
+  ];
+
   return (
     <View style={styles.container}>
       <MapView
@@ -107,17 +132,19 @@ export default function MapViewComponent() {
       >
         <Marker coordinate={desiredCoordinates} title={markerTitle} />
       </MapView>
+		<RideList rides={rides} />
       <ButtonContainer />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    width: "100%",
-    height: "100%",
-  },
-});
+	container: {
+	  flex: 1,
+	  position: "relative", // Ensure RideList and MapView are positioned relative to container
+	},
+	map: {
+	  flex: 1, // Adjusted to occupy remaining space after RideList
+	  ...StyleSheet.absoluteFillObject, // Ensure MapView covers the entire container
+	},
+  });

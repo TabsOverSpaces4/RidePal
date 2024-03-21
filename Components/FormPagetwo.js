@@ -27,6 +27,7 @@ const FormPagetwo = () => {
     console.log("Moving to next step");
     console.log("Selected Destination:", selectedDestinationAddress);
     console.log("Ride Date/Time:", rideDateTime);
+	navigation.navigate("Home");
   };
 
   const handleDateChange = (event, selectedDate) => {
@@ -79,7 +80,7 @@ const FormPagetwo = () => {
             borderColor: "#333",
             borderRadius: 8,
             paddingHorizontal: 10,
-            color: "#ddd",
+            color: "black",
           },
         }}
       />
@@ -112,38 +113,37 @@ const FormPagetwo = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#121212",
-    paddingHorizontal: 20,
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#fff",
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    marginTop: 20,
-  },
-  button: {
-    width: 50,
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 25,
-  },
-  cancelButton: {
-    backgroundColor: "#dc3545",
-  },
-  nextButton: {
-    backgroundColor: "#28a745",
-  },
-});
-
+	container: {
+	  flex: 1,
+	  justifyContent: "center",
+	  alignItems: "center",
+	  backgroundColor: "#242e4c",
+	  paddingHorizontal: 20,
+	},
+	heading: {
+	  fontSize: 24,
+	  fontWeight: "bold",
+	  marginBottom: 60,
+	  color: "#fff",
+	},
+	buttonContainer: {
+	  flexDirection: "row",
+	  justifyContent: "space-around",
+	  width: "100%",
+	  marginTop: 20,
+	},
+	button: {
+	  width: 50,
+	  height: 50,
+	  justifyContent: "center",
+	  alignItems: "center",
+	  borderRadius: 25,
+	},
+	cancelButton: {
+	  backgroundColor: "#fa837a",
+	},
+	nextButton: {
+	  backgroundColor: "#f09142",
+	},
+  });
 export default FormPagetwo;

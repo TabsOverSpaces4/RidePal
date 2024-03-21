@@ -29,12 +29,10 @@ const ButtonContainer = () => {
 
   const handleNewRidePress = () => {
     toggleNewRideModal();
-    console.log("New Ride Pressed");
   };
 
   const handleJoinRidePress = () => {
     toggleJoinRideModal();
-    console.log("Join Ride Pressed");
   };
 
   const handlePlanRide = () => {
@@ -90,21 +88,23 @@ const ButtonContainer = () => {
                   key={index}
                   label={`${index + 2}`}
                   value={index + 2}
+				  color='white'
                 />
               ))}
             </Picker>
             <View style={modalStyles.buttonContainer}>
-              <TouchableOpacity
-                style={modalStyles.modalButton}
-                onPress={handlePlanRide}
-              >
-                <Text style={modalStyles.modalButtonText}>Plan Ride</Text>
-              </TouchableOpacity>
+              
               <TouchableOpacity
                 style={modalStyles.modalButton}
                 onPress={toggleNewRideModal}
               >
                 <Text style={modalStyles.modalButtonText}>Cancel</Text>
+              </TouchableOpacity>
+			  <TouchableOpacity
+                style={modalStyles.modalButton}
+                onPress={handlePlanRide}
+              >
+                <Text style={modalStyles.modalButtonText}>Plan Ride</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -116,7 +116,7 @@ const ButtonContainer = () => {
         <View style={modalStyles.centeredView}>
           <View style={modalStyles.modalView}>
             <Text style={modalStyles.modalTitle}>
-              Enter Ride Details to Join
+              Join Ride!
             </Text>
             <Text style={modalStyles.modalLabel}>Your Name</Text>
             <TextInput
@@ -137,13 +137,13 @@ const ButtonContainer = () => {
                 style={modalStyles.modalButton}
                 onPress={toggleJoinRideModal}
               >
-                <Text style={modalStyles.modalButtonText}>Join Ride</Text>
+                <Text style={modalStyles.modalButtonText}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity
+			  <TouchableOpacity
                 style={modalStyles.modalButton}
                 onPress={toggleJoinRideModal}
               >
-                <Text style={modalStyles.modalButtonText}>Cancel</Text>
+                <Text style={modalStyles.modalButtonText}>Join Ride</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -154,43 +154,47 @@ const ButtonContainer = () => {
 };
 
 const modalStyles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-  },
-  modalView: {
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
+	centeredView: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		marginTop: 22,
+		backgroundColor: 'rgba(0, 0, 0, 0.4)', // Semi-transparent background color
+	  },
+	  modalView: {
+		backgroundColor: "#242e4c",
+		borderRadius: 20,
+		padding: 20,
+		alignItems: "center",
+		shadowColor: "#000",
+		shadowOffset: {
+		  width: 0,
+		  height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
+	  },
   modalTitle: {
     fontSize: 24,
+	color: "white",
     fontWeight: "bold",
     marginBottom: 20,
   },
   modalLabel: {
     fontSize: 16,
+	color: "white",
     marginBottom: 5,
   },
   input: {
     height: 40,
-    borderColor: "gray",
+    borderColor: "#f09142",
     borderRadius: 20,
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
     width: "100%",
+	color:"white",
   },
   picker: {
     height: 200,
@@ -206,7 +210,7 @@ const modalStyles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: "#7397c9",
+    backgroundColor: "#f09142",
   },
   modalButtonText: {
     color: "white",
@@ -226,7 +230,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    backgroundColor: "#37475c",
+    backgroundColor: "rgba(55, 71, 91, 0.9)",
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
@@ -243,10 +247,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   newRideButton: {
-    backgroundColor: "#1abc9c",
+    backgroundColor: "#f09142",
   },
   joinRideButton: {
-    backgroundColor: "#3498db",
+    backgroundColor: "#42bcf0",
   },
 });
 

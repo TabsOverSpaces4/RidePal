@@ -45,7 +45,7 @@ const FormPage = () => {
       <View
         style={{
           marginBottom: 25,
-          backgroundColor: "#7299cf",
+          backgroundColor: "#f09142",
           borderRadius: 25,
         }}
       >
@@ -84,7 +84,7 @@ const FormPage = () => {
             borderColor: "#333",
             borderRadius: 8,
             paddingHorizontal: 10,
-            color: "#ddd",
+            color: "black",
           },
         }}
       />
@@ -121,18 +121,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#121212",
+    backgroundColor: "#242e4c",
     paddingHorizontal: 20,
   },
   heading: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 60,
     color: "#fff",
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     width: "100%",
     marginTop: 20,
   },
@@ -144,10 +144,10 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   cancelButton: {
-    backgroundColor: "#dc3545",
+    backgroundColor: "#fa837a",
   },
   nextButton: {
-    backgroundColor: "#28a745",
+    backgroundColor: "#f09142",
   },
 });
 
