@@ -15,7 +15,8 @@ const ButtonContainer = () => {
   const navigation = useNavigation();
   const [isNewRideModalVisible, setIsNewRideModalVisible] = useState(false);
   const [isJoinRideModalVisible, setIsJoinRideModalVisible] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  const [inputRideNameValue, setInputRideNameValue] = useState("");
+  const [inputYourNameValue, setInputYourNameValue] = useState("");
   const [selectedRiders, setSelectedRiders] = useState(2);
 
   const toggleNewRideModal = () => {
@@ -66,8 +67,15 @@ const ButtonContainer = () => {
             <TextInput
               style={modalStyles.input}
               placeholder="Enter Ride Name"
-              onChangeText={(text) => setInputValue(text)}
-              value={inputValue}
+              onChangeText={(text) => setInputRideNameValue(text)}
+              value={inputRideNameValue}
+            />
+			<Text style={modalStyles.modalLabel}>Your Name:</Text>
+            <TextInput
+              style={modalStyles.input}
+              placeholder="Enter Your Name"
+              onChangeText={(text) => setInputYourNameValue(text)}
+              value={inputYourNameValue}
             />
             <Text style={modalStyles.modalLabel}>Number of Riders:</Text>
             <Picker
@@ -114,15 +122,15 @@ const ButtonContainer = () => {
             <TextInput
               style={modalStyles.input}
               placeholder="Enter Your Name"
-              onChangeText={(text) => setInputValue(text)}
-              value={inputValue}
+              onChangeText={(text) => setInputYourNameValue(text)}
+              value={inputYourNameValue}
             />
             <Text style={modalStyles.modalLabel}>RidePal Code</Text>
             <TextInput
               style={modalStyles.input}
               placeholder="Enter RidePal Code"
-              onChangeText={(text) => setInputValue(text)}
-              value={inputValue}
+              onChangeText={(text) => setInputRideNameValue(text)}
+              value={inputRideNameValue}
             />
             <View style={modalStyles.buttonContainer}>
               <TouchableOpacity

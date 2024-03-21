@@ -1,6 +1,7 @@
 import * as React from "react";
 import MapViewComponent from "./Components/mapview";
 import FormPage from "./Components/FormPage";
+import FormPagetwo from "./Components/FormPagetwo"
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -17,6 +18,11 @@ const MyNavigator = () => {
       <Stack.Screen
         name="Plan Your Ride"
         component={FormPage} 
+		options={{ headerShown: false }}
+      />
+	  <Stack.Screen
+        name="Destination Page"
+        component={FormPagetwo} 
 		options={{ headerShown: false }}
       />
     </Stack.Navigator>

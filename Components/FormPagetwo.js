@@ -11,26 +11,22 @@ import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
-const FormPage = () => {
-  const [selectedAddress, setSelectedAddress] = useState("");
+const FormPagetwo = () => {
+  const [selectedDestinationAddress, setSelectedDestinationAddress] =
+    useState("");
   const navigation = useNavigation();
   const [rideDateTime, setRideDateTime] = useState(new Date());
   const [showDateTimePicker, setShowDateTimePicker] = useState(false);
 
   const handleCancel = () => {
-    // Implement cancel logic here
     navigation.goBack();
     console.log("Form cancelled");
-    // You can navigate to a different screen or perform any other action
   };
 
   const handleNext = () => {
-    // Implement next logic here
     console.log("Moving to next step");
-    console.log("Selected Address:", selectedAddress);
+    console.log("Selected Destination:", selectedDestinationAddress);
     console.log("Ride Date/Time:", rideDateTime);
-    navigation.navigate("Destination Page");
-    // You can navigate to the next step of the form or perform any other action
   };
 
   const handleDateChange = (event, selectedDate) => {
@@ -41,7 +37,7 @@ const FormPage = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Let's Assemble</Text>
+      <Text style={styles.heading}>Where to?</Text>
       <View
         style={{
           marginBottom: 25,
@@ -56,7 +52,7 @@ const FormPage = () => {
           is24Hour={true}
           display="default"
           onChange={handleDateChange}
-          textColor="#FFF" // Set text color to white
+          textColor="#FFF"
           dateTimePickerContainerStyle={{
             backgroundColor: "white",
           }}
@@ -65,8 +61,7 @@ const FormPage = () => {
       <GooglePlacesAutocomplete
         placeholder="Starting Point"
         onPress={(data, details = null) => {
-          // 'details' is provided when fetchDetails = true
-          setSelectedAddress(data.description);
+          setSelectedDestinationAddress(data.description);
         }}
         query={{
           key: "AIzaSyDy9DjPinmRsgXawWJypO5ZzUaDsiU51x8",
@@ -93,7 +88,7 @@ const FormPage = () => {
           style={[styles.button, styles.cancelButton]}
           onPress={handleCancel}
         >
-          <FontAwesome5 name="times" size={24} color="#fff" />
+          <FontAwesome5 name="arrow-left" size={24} color="#fff" />
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.nextButton]}
@@ -151,4 +146,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FormPage;
+export default FormPagetwo;
