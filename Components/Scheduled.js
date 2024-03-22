@@ -1,13 +1,20 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, Image } from "react-native";
 
 const RideList = ({ rides }) => {
   const renderRideItem = ({ item }) => (
     <View style={styles.rideItem}>
-      <Text style={styles.rideName}>{item.name}</Text>
-      <Text style={styles.rideInfo}>{`Start Time: ${item.startTime}`}</Text>
-      <Text style={styles.rideInfo}>{`From: ${item.startingPoint}`}</Text>
-      <Text style={styles.rideInfo}>{`To: ${item.destination}`}</Text>
+      <View style={styles.leftContainer}>
+        <Text style={styles.rideName}>{item.rideName}</Text>
+        <Text style={styles.rideInfo}>{`Start Time: ${item.startTime}`}</Text>
+        <Text style={styles.rideInfo}>{`From: ${item.startingPoint}`}</Text>
+        <Text style={styles.rideInfo}>{`To: ${item.destination}`}</Text>
+      </View>
+      <View style={styles.rightContainer}>
+        <Image source={require("../assets/helmet.png")} style={styles.image} />
+        <Text style={styles.additionalText}>{`Admin: ${item.admin}`}</Text>
+        <Text style={styles.additionalText}>{`Riders: ${item.riders}`}</Text>
+      </View>
     </View>
   );
 
@@ -23,14 +30,15 @@ const RideList = ({ rides }) => {
   );
 };
 
+
 const styles = StyleSheet.create({
   container: {
-	maxHeight:"25%",
+	maxHeight: "27%",
     backgroundColor: "rgba(55, 71, 91, 0.8)",
-    padding: 10,
+    padding: 15,
     borderRadius: 10,
     margin: 10,
-	marginTop:65,
+    marginTop: 65,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -41,28 +49,54 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
-    margin: 10,
-    color: "#FFFFFF",
+    marginBottom: 15,
+    color: "#ffffff",
+    textAlign: "center",
   },
   rideItem: {
-    marginBottom: 10,
-    backgroundColor: "rgba(48, 67, 90, 1)",
-    padding: 15,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#333333",
+    flexDirection: "row",
+    marginBottom: 15,
+  },
+  leftContainer: {
+    flex: 1,
+    paddingRight: 10,
+  },
+  rightContainer: {
+    alignItems: "flex-end",
   },
   rideName: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
+    color: "#ffffff",
     marginBottom: 5,
-    color: "#FFFFFF",
+  },
+  rideInfoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 5,
+  },
+  label: {
+    fontSize: 14,
+    color: "#9ca5b3",
+    marginRight: 5,
   },
   rideInfo: {
     fontSize: 14,
-    color: "#CCCCCC",
+    color: "#ffffff",
+    flexShrink: 1,
+  },
+  additionalText: {
+    fontSize: 14,
+    color: "#9ca5b3",
+    marginBottom: 5,
+  },
+  image: {
+	tintColor: "#CCCCCC",
+    width: 40,
+    height: 30,
+    marginBottom: 10,
   },
 });
 

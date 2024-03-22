@@ -7,15 +7,17 @@ import {
   StyleSheet,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, route } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
-const FormPage = () => {
+
+const FormPage = ({ route }) => {
   const [selectedAddress, setSelectedAddress] = useState("");
   const navigation = useNavigation();
   const [rideDateTime, setRideDateTime] = useState(new Date());
   const [showDateTimePicker, setShowDateTimePicker] = useState(false);
+  const { rideName, yourName, numberOfRiders } = route.params;
 
   const handleCancel = () => {
     // Implement cancel logic here
@@ -26,10 +28,14 @@ const FormPage = () => {
 
   const handleNext = () => {
     // Implement next logic here
-    console.log("Moving to next step");
-    console.log("Selected Address:", selectedAddress);
-    console.log("Ride Date/Time:", rideDateTime);
-    navigation.navigate("Destination Page");
+    console.log(rideDateTime,selectedAddress);
+    navigation.navigate("Destination Page", {
+		selectedAddress: selectedAddress,
+		rideDateTime: rideDateTime,
+	  rideName: rideName,
+      yourName: yourName,
+      numberOfRiders: numberOfRiders,
+    });
     // You can navigate to the next step of the form or perform any other action
   };
 

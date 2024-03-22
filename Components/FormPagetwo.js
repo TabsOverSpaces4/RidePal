@@ -11,13 +11,13 @@ import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
-const FormPagetwo = () => {
+const FormPagetwo = ({ route }) => {
   const [selectedDestinationAddress, setSelectedDestinationAddress] =
     useState("");
   const navigation = useNavigation();
-  const [rideDateTime, setRideDateTime] = useState(new Date());
   const [showDateTimePicker, setShowDateTimePicker] = useState(false);
-
+  const { rideName, yourName, numberOfRiders, selectedAddress, rideDateTime } =
+    route.params;
   const handleCancel = () => {
     navigation.goBack();
     console.log("Form cancelled");
@@ -25,21 +25,51 @@ const FormPagetwo = () => {
 
   const handleNext = () => {
     console.log("Moving to next step");
-    console.log("Selected Destination:", selectedDestinationAddress);
-    console.log("Ride Date/Time:", rideDateTime);
-	navigation.navigate("Home");
+    console.log(
+      "Selected Destination:",
+      selectedDestinationAddress,
+      "Name of Ride:",
+      rideName,
+      "riders name:",
+      yourName,
+      "number of Riders:",
+      numberOfRiders,
+      "Starting Point:",
+      selectedAddress,
+      "Ride Time:",
+      rideDateTime
+    );
+    navigation.navigate("Home", {
+      selectedAddress: selectedAddress,
+      rideDateTime: rideDateTime,
+      rideName: rideName,
+      yourName: yourName,
+      numberOfRiders: numberOfRiders,
+      selectedDestinationAddress: selectedDestinationAddress,
+    });
   };
 
-  const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || rideDateTime;
-    setShowDateTimePicker(false);
-    setRideDateTime(currentDate);
-  };
+  const data = [
+    {
+      selectedAddress: selectedAddress,
+      rideDateTime: rideDateTime,
+      rideName: rideName,
+      yourName: yourName,
+      numberOfRiders: numberOfRiders,
+      selectedDestinationAddress: selectedDestinationAddress,
+    },
+  ];
+
+  //   const handleDateChange = (event, selectedDate) => {
+  //     const currentDate = selectedDate || rideDateTime;
+  //     setShowDateTimePicker(false);
+  //     setRideDateTime(currentDate);
+  //   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Where to?</Text>
-      <View
+      {/* <View
         style={{
           marginBottom: 25,
           backgroundColor: "#7299cf",
@@ -58,9 +88,9 @@ const FormPagetwo = () => {
             backgroundColor: "white",
           }}
         />
-      </View>
+      </View> */}
       <GooglePlacesAutocomplete
-        placeholder="Starting Point"
+        placeholder="Enter Destination"
         onPress={(data, details = null) => {
           setSelectedDestinationAddress(data.description);
         }}
@@ -113,37 +143,37 @@ const FormPagetwo = () => {
 };
 
 const styles = StyleSheet.create({
-	container: {
-	  flex: 1,
-	  justifyContent: "center",
-	  alignItems: "center",
-	  backgroundColor: "#242e4c",
-	  paddingHorizontal: 20,
-	},
-	heading: {
-	  fontSize: 24,
-	  fontWeight: "bold",
-	  marginBottom: 60,
-	  color: "#fff",
-	},
-	buttonContainer: {
-	  flexDirection: "row",
-	  justifyContent: "space-around",
-	  width: "100%",
-	  marginTop: 20,
-	},
-	button: {
-	  width: 50,
-	  height: 50,
-	  justifyContent: "center",
-	  alignItems: "center",
-	  borderRadius: 25,
-	},
-	cancelButton: {
-	  backgroundColor: "#fa837a",
-	},
-	nextButton: {
-	  backgroundColor: "#f09142",
-	},
-  });
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#242e4c",
+    paddingHorizontal: 20,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 60,
+    color: "#fff",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+    marginTop: 20,
+  },
+  button: {
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 25,
+  },
+  cancelButton: {
+    backgroundColor: "#fa837a",
+  },
+  nextButton: {
+    backgroundColor: "#f09142",
+  },
+});
 export default FormPagetwo;

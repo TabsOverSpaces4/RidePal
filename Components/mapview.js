@@ -4,10 +4,55 @@ import ButtonContainer from "./options";
 import { StyleSheet, View } from "react-native";
 import RideList from "./Scheduled";
 
-export default function MapViewComponent() {
-  const desiredCoordinates = { latitude: 12.934443, longitude: 77.682991 };
-  const markerTitle = "Your Location";
+function formatDate(dateTimeString) {
+  const dateTime = new Date(dateTimeString);
+  const day = dateTime.getDate().toString().padStart(2, "0");
+  const month = (dateTime.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based
+  const year = dateTime.getFullYear();
+  let hours = dateTime.getHours();
+  const minutes = dateTime.getMinutes().toString().padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12;
+  hours = hours ? hours : 12; // Handle midnight (0 hours)
+  const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+  return formattedDateTime;
+}
 
+const MapViewComponent = ({ route }) => {
+	const desiredCoordinates = { latitude: 12.934443, longitude: 77.682991 };
+	const markerTitle = "Your Location";
+	const {
+		rideName,
+		yourName,
+		numberOfRiders,
+		selectedAddress,
+		rideDateTime,
+		selectedDestinationAddress,
+	  } = route.params || {};
+	const [rides, setRides] = useState([]);
+  
+	useEffect(() => {
+	  // Effect to update rides data when route params change
+	  if (route.params) {
+		const newRide = {
+		  id: rides.length + 1, // Generate unique ID for the new ride
+		  rideName: rideName,
+		  startTime: formatDate(rideDateTime),
+		  startingPoint: selectedAddress,
+		  destination: selectedDestinationAddress,
+		  admin: yourName,
+		  riders: numberOfRiders,
+		};
+		setRides((prevRides) => [...prevRides, newRide]); // Add new ride to rides state
+	  }
+	}, [
+	  rideName,
+	  rideDateTime,
+	  selectedAddress,
+	  selectedDestinationAddress,
+	  yourName,
+	  numberOfRiders,
+	]); // Update rides data when specific route params change
   const mapCustomStyle = [
     { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
     { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
@@ -89,35 +134,11 @@ export default function MapViewComponent() {
     },
   ];
 
-  const rides = [
-    {
-      id: 1,
-      name: "Ride 1",
-      startTime: "10:00 AM",
-      startingPoint: "Point A",
-      destination: "Point B",
-    },
-    {
-      id: 2,
-      name: "Ride 2",
-      startTime: "11:00 AM",
-      startingPoint: "Point C",
-      destination: "Point D",
-    },
-	{
-		id: 3,
-		name: "Ride 3",
-		startTime: "11:00 AM",
-		startingPoint: "Point C",
-		destination: "Point D",
-	  },
-    // Add more ride objects as needed
-  ];
-
   return (
     <View style={styles.container}>
       <MapView
-	  use customMapStyle= {mapCustomStyle}
+        use
+        customMapStyle={mapCustomStyle}
         provider="google"
         showsUserLocation={true}
         followsUserLocation={true}
@@ -132,19 +153,21 @@ export default function MapViewComponent() {
       >
         <Marker coordinate={desiredCoordinates} title={markerTitle} />
       </MapView>
-		<RideList rides={rides} />
+      <RideList rides={rides} />
       <ButtonContainer />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-	container: {
-	  flex: 1,
-	  position: "relative", // Ensure RideList and MapView are positioned relative to container
-	},
-	map: {
-	  flex: 1, // Adjusted to occupy remaining space after RideList
-	  ...StyleSheet.absoluteFillObject, // Ensure MapView covers the entire container
-	},
-  });
+  container: {
+    flex: 1,
+    position: "relative", // Ensure RideList and MapView are positioned relative to container
+  },
+  map: {
+    flex: 1, // Adjusted to occupy remaining space after RideList
+    ...StyleSheet.absoluteFillObject, // Ensure MapView covers the entire container
+  },
+});
+
+export default MapViewComponent;

@@ -8,16 +8,15 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
 const ButtonContainer = () => {
   const navigation = useNavigation();
   const [isNewRideModalVisible, setIsNewRideModalVisible] = useState(false);
   const [isJoinRideModalVisible, setIsJoinRideModalVisible] = useState(false);
-  const [inputRideNameValue, setInputRideNameValue] = useState("");
-  const [inputYourNameValue, setInputYourNameValue] = useState("");
-  const [selectedRiders, setSelectedRiders] = useState(2);
+  const [rideName, setRideName] = useState("");
+  const [yourName, setYourName] = useState("");
+  const [numberOfRiders, setNumberOfRiders] = useState(2);
 
   const toggleNewRideModal = () => {
     setIsNewRideModalVisible(!isNewRideModalVisible);
@@ -38,7 +37,11 @@ const ButtonContainer = () => {
   const handlePlanRide = () => {
     console.log("User is trying to plan a ride");
     toggleNewRideModal();
-    navigation.navigate("Plan Your Ride");
+    navigation.navigate("PlanYourRide", {
+      rideName: rideName,
+      yourName: yourName,
+      numberOfRiders: numberOfRiders,
+    });
   };
 
   return (
@@ -65,22 +68,24 @@ const ButtonContainer = () => {
             <TextInput
               style={modalStyles.input}
               placeholder="Enter Ride Name"
-              onChangeText={(text) => setInputRideNameValue(text)}
-              value={inputRideNameValue}
+              placeholderTextColor="grey"
+              onChangeText={(text) => setRideName(text)}
+              value={rideName}
             />
-			<Text style={modalStyles.modalLabel}>Your Name:</Text>
+            <Text style={modalStyles.modalLabel}>Your Name:</Text>
             <TextInput
               style={modalStyles.input}
               placeholder="Enter Your Name"
-              onChangeText={(text) => setInputYourNameValue(text)}
-              value={inputYourNameValue}
+              placeholderTextColor="grey"
+              onChangeText={(text) => setYourName(text)}
+              value={yourName}
             />
             <Text style={modalStyles.modalLabel}>Number of Riders:</Text>
             <Picker
-              selectedValue={selectedRiders}
+              selectedValue={numberOfRiders}
               style={modalStyles.picker}
               onValueChange={(itemValue, itemIndex) =>
-                setSelectedRiders(itemValue)
+                setNumberOfRiders(itemValue)
               }
             >
               {[...Array(29)].map((_, index) => (
@@ -88,19 +93,18 @@ const ButtonContainer = () => {
                   key={index}
                   label={`${index + 2}`}
                   value={index + 2}
-				  color='white'
+                  color="white"
                 />
               ))}
             </Picker>
             <View style={modalStyles.buttonContainer}>
-              
               <TouchableOpacity
                 style={modalStyles.modalButton}
                 onPress={toggleNewRideModal}
               >
                 <Text style={modalStyles.modalButtonText}>Cancel</Text>
               </TouchableOpacity>
-			  <TouchableOpacity
+              <TouchableOpacity
                 style={modalStyles.modalButton}
                 onPress={handlePlanRide}
               >
@@ -115,22 +119,20 @@ const ButtonContainer = () => {
       <Modal visible={isJoinRideModalVisible} transparent animationType="slide">
         <View style={modalStyles.centeredView}>
           <View style={modalStyles.modalView}>
-            <Text style={modalStyles.modalTitle}>
-              Join Ride!
-            </Text>
+            <Text style={modalStyles.modalTitle}>Join Ride!</Text>
             <Text style={modalStyles.modalLabel}>Your Name</Text>
             <TextInput
               style={modalStyles.input}
               placeholder="Enter Your Name"
-              onChangeText={(text) => setInputYourNameValue(text)}
-              value={inputYourNameValue}
+              onChangeText={(text) => setYourName(text)}
+              value={yourName}
             />
             <Text style={modalStyles.modalLabel}>RidePal Code</Text>
             <TextInput
               style={modalStyles.input}
               placeholder="Enter RidePal Code"
-              onChangeText={(text) => setInputRideNameValue(text)}
-              value={inputRideNameValue}
+              onChangeText={(text) => setRideName(text)}
+              value={rideName}
             />
             <View style={modalStyles.buttonContainer}>
               <TouchableOpacity
@@ -139,7 +141,7 @@ const ButtonContainer = () => {
               >
                 <Text style={modalStyles.modalButtonText}>Cancel</Text>
               </TouchableOpacity>
-			  <TouchableOpacity
+              <TouchableOpacity
                 style={modalStyles.modalButton}
                 onPress={toggleJoinRideModal}
               >
@@ -152,7 +154,6 @@ const ButtonContainer = () => {
     </View>
   );
 };
-
 const modalStyles = StyleSheet.create({
 	centeredView: {
 		flex: 1,
@@ -182,15 +183,16 @@ const modalStyles = StyleSheet.create({
     marginBottom: 20,
   },
   modalLabel: {
-    fontSize: 16,
+    fontSize: 19,
 	color: "white",
     marginBottom: 5,
   },
   input: {
+	fontSize: 16,
     height: 40,
     borderColor: "#f09142",
     borderRadius: 20,
-    borderWidth: 1,
+    borderWidth: 2,
     marginBottom: 20,
     paddingHorizontal: 10,
     width: "100%",
