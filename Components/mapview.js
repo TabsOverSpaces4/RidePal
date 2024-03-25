@@ -5,18 +5,25 @@ import { StyleSheet, View } from "react-native";
 import RideList from "./Scheduled";
 
 function formatDate(dateTimeString) {
-  const dateTime = new Date(dateTimeString);
-  const day = dateTime.getDate().toString().padStart(2, "0");
-  const month = (dateTime.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based
-  const year = dateTime.getFullYear();
-  let hours = dateTime.getHours();
-  const minutes = dateTime.getMinutes().toString().padStart(2, "0");
-  const ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12;
-  hours = hours ? hours : 12; // Handle midnight (0 hours)
-  const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
-  return formattedDateTime;
-}
+	const dateTime = new Date(dateTimeString);
+	const day = dateTime.getDate().toString().padStart(2, "0");
+	const monthNames = [
+	  "Jan", "Feb", "Mar",
+	  "Apr", "May", "Jun", "Jul",
+	  "Aug", "Sep", "Oct",
+	  "Nov", "Dec"
+	];
+	const monthIndex = dateTime.getMonth();
+	const year = dateTime.getFullYear();
+	let hours = dateTime.getHours();
+	const minutes = dateTime.getMinutes().toString().padStart(2, "0");
+	const ampm = hours >= 12 ? "PM" : "AM";
+	hours = hours % 12;
+	hours = hours ? hours : 12; // Handle midnight (0 hours)
+	const formattedDateTime = `${hours}:${minutes} ${ampm} ${day} ${monthNames[monthIndex]} ${year}`;
+	return formattedDateTime;
+  }
+  
 
 const MapViewComponent = ({ route }) => {
 	const desiredCoordinates = { latitude: 12.934443, longitude: 77.682991 };

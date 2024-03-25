@@ -1,23 +1,16 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 const FormPagetwo = ({ route }) => {
   const [selectedDestinationAddress, setSelectedDestinationAddress] =
     useState("");
   const navigation = useNavigation();
-  const [showDateTimePicker, setShowDateTimePicker] = useState(false);
   const { rideName, yourName, numberOfRiders, selectedAddress, rideDateTime } =
     route.params;
+
   const handleCancel = () => {
     navigation.goBack();
     console.log("Form cancelled");
@@ -49,53 +42,16 @@ const FormPagetwo = ({ route }) => {
     });
   };
 
-  const data = [
-    {
-      selectedAddress: selectedAddress,
-      rideDateTime: rideDateTime,
-      rideName: rideName,
-      yourName: yourName,
-      numberOfRiders: numberOfRiders,
-      selectedDestinationAddress: selectedDestinationAddress,
-    },
-  ];
-
-  //   const handleDateChange = (event, selectedDate) => {
-  //     const currentDate = selectedDate || rideDateTime;
-  //     setShowDateTimePicker(false);
-  //     setRideDateTime(currentDate);
-  //   };
-
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Where to?</Text>
-      {/* <View
-        style={{
-          marginBottom: 25,
-          backgroundColor: "#7299cf",
-          borderRadius: 25,
-        }}
-      >
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={rideDateTime}
-          mode="datetime"
-          is24Hour={true}
-          display="default"
-          onChange={handleDateChange}
-          textColor="#FFF"
-          dateTimePickerContainerStyle={{
-            backgroundColor: "white",
-          }}
-        />
-      </View> */}
       <GooglePlacesAutocomplete
         placeholder="Enter Destination"
         onPress={(data, details = null) => {
           setSelectedDestinationAddress(data.description);
         }}
         query={{
-          key: "AIzaSyDy9DjPinmRsgXawWJypO5ZzUaDsiU51x8",
+          key: "AIzaSyDy9DjPinmRsgXawWJypO5ZzUaDsiU51x8", 
           language: "en",
         }}
         styles={{
@@ -122,22 +78,17 @@ const FormPagetwo = ({ route }) => {
           <FontAwesome5 name="arrow-left" size={24} color="#fff" />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.button, styles.nextButton]}
+          style={[
+            styles.button,
+            styles.nextButton,
+            selectedDestinationAddress ? {} : { backgroundColor: "gray" }, // Disable button if selectedDestinationAddress is empty
+          ]}
           onPress={handleNext}
+          disabled={!selectedDestinationAddress}
         >
           <FontAwesome5 name="arrow-right" size={24} color="#fff" />
         </TouchableOpacity>
       </View>
-      {showDateTimePicker && (
-        <DateTimePicker
-          value={rideDateTime}
-          mode="datetime"
-          is24Hour={true}
-          display="default"
-          onChange={handleDateChange}
-          textColor="#FFF"
-        />
-      )}
     </View>
   );
 };
@@ -176,4 +127,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#f09142",
   },
 });
+
 export default FormPagetwo;

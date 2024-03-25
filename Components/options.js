@@ -105,8 +105,12 @@ const ButtonContainer = () => {
                 <Text style={modalStyles.modalButtonText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={modalStyles.modalButton}
+                style={[
+                  modalStyles.modalButton,
+                  (rideName === '' || yourName === '') && { backgroundColor: "gray" }, // Disable button if rideName or yourName is empty
+                ]}
                 onPress={handlePlanRide}
+                disabled={rideName === '' || yourName === ''}
               >
                 <Text style={modalStyles.modalButtonText}>Plan Ride</Text>
               </TouchableOpacity>

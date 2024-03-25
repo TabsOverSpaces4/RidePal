@@ -4,12 +4,23 @@ import { View, Text, FlatList, StyleSheet, Image } from "react-native";
 const RideList = ({ rides }) => {
   const renderRideItem = ({ item }) => (
     <View style={styles.rideItem}>
+      {/* Left side: ride details */}
       <View style={styles.leftContainer}>
         <Text style={styles.rideName}>{item.rideName}</Text>
-        <Text style={styles.rideInfo}>{`Start Time: ${item.startTime}`}</Text>
-        <Text style={styles.rideInfo}>{`From: ${item.startingPoint}`}</Text>
-        <Text style={styles.rideInfo}>{`To: ${item.destination}`}</Text>
+        <View style={styles.rideInfoContainer}>
+          <Text style={styles.label}>Start Time:</Text>
+          <Text numberOfLines={1} style={styles.rideInfo}>{item.startTime}</Text>
+        </View>
+        <View style={styles.rideInfoContainer}>
+          <Text style={styles.label}>From:</Text>
+          <Text numberOfLines={1} ellipsizeMode="tail" style={styles.rideInfo}>{item.startingPoint}</Text>
+        </View>
+        <View style={styles.rideInfoContainer}>
+          <Text style={styles.label}>To:</Text>
+          <Text numberOfLines={2} ellipsizeMode="tail" style={styles.rideInfo}>{item.destination}</Text>
+        </View>
       </View>
+      {/* Right side: admin, riders, and image */}
       <View style={styles.rightContainer}>
         <Image source={require("../assets/helmet.png")} style={styles.image} />
         <Text style={styles.additionalText}>{`Admin: ${item.admin}`}</Text>
@@ -21,19 +32,24 @@ const RideList = ({ rides }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Scheduled Rides</Text>
-      <FlatList
-        data={rides}
-        renderItem={renderRideItem}
-        keyExtractor={(item) => item.id.toString()}
-      />
+      {rides.length === 0 ? (
+        <Text style={styles.noRidesText}>No scheduled rides.
+        Create a New Ride or Join an existing Ride to get started.</Text>
+
+      ) : (
+        <FlatList
+          data={rides}
+          renderItem={renderRideItem}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      )}
     </View>
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
-	maxHeight: "27%",
+    maxHeight: "27%",
     backgroundColor: "rgba(55, 71, 91, 0.8)",
     padding: 15,
     borderRadius: 10,
@@ -93,10 +109,15 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   image: {
-	tintColor: "#CCCCCC",
+    tintColor: "#CCCCCC",
     width: 40,
     height: 30,
     marginBottom: 10,
+  },
+  noRidesText: {
+    color: "#bdbdbd",
+    fontSize: 16,
+    textAlign: "center",
   },
 });
 
