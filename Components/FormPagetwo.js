@@ -17,21 +17,6 @@ const FormPagetwo = ({ route }) => {
   };
 
   const handleNext = () => {
-    console.log("Moving to next step");
-    console.log(
-      "Selected Destination:",
-      selectedDestinationAddress,
-      "Name of Ride:",
-      rideName,
-      "riders name:",
-      yourName,
-      "number of Riders:",
-      numberOfRiders,
-      "Starting Point:",
-      selectedAddress,
-      "Ride Time:",
-      rideDateTime
-    );
     navigation.navigate("Home", {
       selectedAddress: selectedAddress,
       rideDateTime: rideDateTime,

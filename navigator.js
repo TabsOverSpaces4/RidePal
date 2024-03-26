@@ -1,9 +1,10 @@
 import * as React from "react";
 import MapViewComponent from "./Components/mapview";
 import FormPage from "./Components/FormPage";
-import FormPagetwo from "./Components/FormPagetwo"
+import FormPagetwo from "./Components/FormPagetwo";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { StatusBar } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -13,17 +14,17 @@ const MyNavigator = () => {
       <Stack.Screen
         name="Home"
         component={MapViewComponent}
-		options={{ headerShown: false }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="PlanYourRide"
-        component={FormPage} 
-		options={{ headerShown: false }}
+        component={FormPage}
+        options={{ headerShown: false }}
       />
-	  <Stack.Screen
+      <Stack.Screen
         name="Destination Page"
-        component={FormPagetwo} 
-		options={{ headerShown: false }}
+        component={FormPagetwo}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
@@ -32,6 +33,7 @@ const MyNavigator = () => {
 export default function AppNavigator() {
   return (
     <NavigationContainer>
+      <StatusBar barStyle="light    -content" />
       <MyNavigator />
     </NavigationContainer>
   );

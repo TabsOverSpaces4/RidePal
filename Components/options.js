@@ -163,7 +163,7 @@ const modalStyles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		marginTop: 22,
+		// marginTop: 22,
 		backgroundColor: 'rgba(0, 0, 0, 0.4)', // Semi-transparent background color
 	  },
 	  modalView: {

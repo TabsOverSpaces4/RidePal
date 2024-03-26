@@ -25,41 +25,38 @@ function formatDate(dateTimeString) {
   }
   
 
-const MapViewComponent = ({ route }) => {
-	const desiredCoordinates = { latitude: 12.934443, longitude: 77.682991 };
-	const markerTitle = "Your Location";
-	const {
-		rideName,
-		yourName,
-		numberOfRiders,
-		selectedAddress,
-		rideDateTime,
-		selectedDestinationAddress,
-	  } = route.params || {};
-	const [rides, setRides] = useState([]);
+  const MapViewComponent = ({ route }) => {
+    const desiredCoordinates = { latitude: 12.934443, longitude: 77.682991 };
+    const markerTitle = "Your Location";
+    const {
+      rideName,
+      yourName,
+      numberOfRiders,
+      selectedAddress,
+      rideDateTime,
+      selectedDestinationAddress,
+    } = route.params || {};
+    const [rides, setRides] = useState([]);
   
-	useEffect(() => {
-	  // Effect to update rides data when route params change
-	  if (route.params) {
-		const newRide = {
-		  id: rides.length + 1, // Generate unique ID for the new ride
-		  rideName: rideName,
-		  startTime: formatDate(rideDateTime),
-		  startingPoint: selectedAddress,
-		  destination: selectedDestinationAddress,
-		  admin: yourName,
-		  riders: numberOfRiders,
-		};
-		setRides((prevRides) => [...prevRides, newRide]); // Add new ride to rides state
-	  }
-	}, [
-	  rideName,
-	  rideDateTime,
-	  selectedAddress,
-	  selectedDestinationAddress,
-	  yourName,
-	  numberOfRiders,
-	]); // Update rides data when specific route params change
+    useEffect(() => {
+      // Effect to update rides data when route params change
+      if (route.params) {
+        const newRide = {
+          id: rides.length + 1, // Generate unique ID for the new ride
+          rideName: rideName,
+          startTime: formatDate(rideDateTime),
+          startingPoint: selectedAddress,
+          destination: selectedDestinationAddress,
+          admin: yourName,
+          riders: numberOfRiders,
+        };
+        setRides((prevRides) => [...prevRides, newRide]); // Add new ride to rides state
+      }
+    }, [rideName, rideDateTime, selectedAddress, selectedDestinationAddress, yourName, numberOfRiders]); // Update rides data when specific route params change
+  
+    const handleDeleteRide = (id) => {
+      setRides((prevRides) => prevRides.filter((ride) => ride.id !== id));
+    };
   const mapCustomStyle = [
     { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
     { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
@@ -160,7 +157,7 @@ const MapViewComponent = ({ route }) => {
       >
         <Marker coordinate={desiredCoordinates} title={markerTitle} />
       </MapView>
-      <RideList rides={rides} />
+      <RideList rides={rides} onDeleteRide={handleDeleteRide} />
       <ButtonContainer />
     </View>
   );
