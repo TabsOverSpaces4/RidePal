@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import config from "../config";
 
 const FormPagetwo = ({ route }) => {
   const [selectedDestinationAddress, setSelectedDestinationAddress] =
@@ -36,7 +37,7 @@ const FormPagetwo = ({ route }) => {
           setSelectedDestinationAddress(data.description);
         }}
         query={{
-          key: "AIzaSyDy9DjPinmRsgXawWJypO5ZzUaDsiU51x8", 
+          key: config.googleMapsApiKey, 
           language: "en",
         }}
         styles={{

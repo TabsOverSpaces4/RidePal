@@ -10,6 +10,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation, route } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import config from "../config";
 
 const FormPage = ({ route }) => {
   const [selectedAddress, setSelectedAddress] = useState("");
@@ -76,7 +77,7 @@ const FormPage = ({ route }) => {
           setSelectedAddress(data.description);
         }}
         query={{
-          key: "AIzaSyDy9DjPinmRsgXawWJypO5ZzUaDsiU51x8",
+          key: config.googleMapsApiKey,
           language: "en",
         }}
         styles={{
