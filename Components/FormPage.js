@@ -14,10 +14,14 @@ import config from "../config";
 
 const FormPage = ({ route }) => {
   const [selectedAddress, setSelectedAddress] = useState("");
+  const [selectedStartLatitude, setSelectedStartLatitude] = useState("");
+  const [selectedStartLongitude, setSelectedStartLongitude] = useState("");
   const [rideDateTime, setRideDateTime] = useState(new Date());
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); // State to track button disabled state
   const navigation = useNavigation();
   const { rideName, yourName, numberOfRiders } = route.params;
+  const placeDetailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?placeid=<span class="math-inline">\{details\.place\_id\}&key\=</span>{config.googleMapsApiKey}`;
+
 
   useEffect(() => {
     // Check if all input fields are filled
@@ -37,13 +41,15 @@ const FormPage = ({ route }) => {
 
   const handleNext = () => {
     // Implement next logic here
-    console.log(rideDateTime, selectedAddress);
+    console.log(rideDateTime, selectedAddress, selectedStartLatitude, selectedStartLongitude);
     navigation.navigate("Destination Page", {
       selectedAddress: selectedAddress,
       rideDateTime: rideDateTime,
       rideName: rideName,
       yourName: yourName,
       numberOfRiders: numberOfRiders,
+      selectedStartLatitude: selectedStartLatitude,
+      selectedStartLongitude: selectedStartLongitude
     });
     // You can navigate to the next step of the form or perform any other action
   };
@@ -72,13 +78,31 @@ const FormPage = ({ route }) => {
       </View>
       <GooglePlacesAutocomplete
         placeholder="Starting Point"
-        onPress={(data, details = null) => {
-          // 'details' is provided when fetchDetails = true
-          setSelectedAddress(data.description);
+        onPress={(data, details) => {
+          if (details) {
+            // Extract placeID from details
+            const placeId = details.place_id;
+    
+            // Make a separate API call to get details including lat and lng
+            fetch(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&key=${config.googleMapsApiKey}`)
+                .then(response => response.json())
+                .then(data => {
+                    const { lat, lng } = data.result.geometry.location;
+            setSelectedStartLatitude(lat);
+            setSelectedStartLongitude(lng);
+
+                })
+                .catch(error => console.error(error));
+    
+            setSelectedAddress(data.description);
+        } else {
+            console.log("Details not yet available");
+        }
         }}
         query={{
           key: config.googleMapsApiKey,
           language: "en",
+          fetchDetails: true,
         }}
         styles={{
           container: {
@@ -104,7 +128,11 @@ const FormPage = ({ route }) => {
           <FontAwesome5 name="times" size={24} color="#fff" />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.button, styles.nextButton, isButtonDisabled && styles.disabledButton]} // Apply disabled style if button is disabled
+          style={[
+            styles.button,
+            styles.nextButton,
+            isButtonDisabled && styles.disabledButton,
+          ]} // Apply disabled style if button is disabled
           onPress={handleNext}
           disabled={isButtonDisabled} // Disable button based on state
         >

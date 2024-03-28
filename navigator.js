@@ -5,6 +5,7 @@ import FormPagetwo from "./Components/FormPagetwo";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "react-native";
+import MapviewNav from "./Components/mapviewNavigation";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,11 @@ const MyNavigator = () => {
         component={FormPagetwo}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="MapviewNavigation"
+        component={MapviewNav}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };
@@ -38,3 +44,4 @@ export default function AppNavigator() {
     </NavigationContainer>
   );
 }
+//MapviewNavigation

@@ -6,10 +6,13 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import config from "../config";
 
 const FormPagetwo = ({ route }) => {
+  const [selectedDestinationLatitude, setSelectedDestinationLatitude] = useState("");
+  const [selectedDestinationLongitude, setSelectedDestinationLongitude] = useState("");
   const [selectedDestinationAddress, setSelectedDestinationAddress] =
     useState("");
   const navigation = useNavigation();
-  const { rideName, yourName, numberOfRiders, selectedAddress, rideDateTime } =
+  const placeDetailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?placeid=<span class="math-inline">\{details\.place\_id\}&key\=</span>{config.googleMapsApiKey}`;
+  const { rideName, yourName, numberOfRiders, selectedAddress, rideDateTime, selectedStartLatitude, selectedStartLongitude } =
     route.params;
 
   const handleCancel = () => {
@@ -25,6 +28,10 @@ const FormPagetwo = ({ route }) => {
       yourName: yourName,
       numberOfRiders: numberOfRiders,
       selectedDestinationAddress: selectedDestinationAddress,
+      selectedStartLatitude: selectedStartLatitude,
+      selectedStartLongitude: selectedStartLongitude,
+      selectedDestinationLatitude: selectedDestinationLatitude,
+      selectedDestinationLongitude: selectedDestinationLongitude
     });
   };
 
@@ -33,12 +40,31 @@ const FormPagetwo = ({ route }) => {
       <Text style={styles.heading}>Where to?</Text>
       <GooglePlacesAutocomplete
         placeholder="Enter Destination"
-        onPress={(data, details = null) => {
-          setSelectedDestinationAddress(data.description);
+        onPress={(data, details) => {
+          if (details) {
+            // Extract placeID from details
+            const placeId = details.place_id;
+    
+            // Make a separate API call to get details including lat and lng
+            fetch(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&key=${config.googleMapsApiKey}`)
+                .then(response => response.json())
+                .then(data => {
+                    const { lat, lng } = data.result.geometry.location;
+            setSelectedDestinationLatitude(lat);
+            setSelectedDestinationLongitude(lng);
+
+                })
+                .catch(error => console.error(error));
+    
+                setSelectedDestinationAddress(data.description);
+        } else {
+            console.log("Details not yet available");
+        }
         }}
         query={{
-          key: config.googleMapsApiKey, 
+          key: config.googleMapsApiKey,
           language: "en",
+          fetchDetails: true,
         }}
         styles={{
           container: {

@@ -31,7 +31,10 @@ const ButtonContainer = () => {
   };
 
   const handleJoinRidePress = () => {
-    toggleJoinRideModal();
+    // toggleJoinRideModal();
+    navigation.navigate("MapviewNavigation")
+
+
   };
 
   const handlePlanRide = () => {

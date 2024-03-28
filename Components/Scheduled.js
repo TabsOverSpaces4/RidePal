@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-
 const RideList = ({ rides, onDeleteRide }) => {
   const [selectedRide, setSelectedRide] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -76,7 +75,29 @@ const RideList = ({ rides, onDeleteRide }) => {
 
   const rideNow = () => {
     setModalVisible(false);
-    navigation.navigate("Home");
+    navigation.navigate("MapviewNavigation", {
+      rideName: selectedRide.rideName,
+      startTime: selectedRide.startTime,
+      startingPoint: selectedRide.startingPoint,
+        destination: selectedRide.destination,
+        admin: selectedRide.admin,
+        riders: selectedRide.riders,
+        selectedStartLatitude: selectedRide.selectedStartLatitude,
+        selectedStartLongitude: selectedRide.selectedStartLongitude,
+        selectedDestinationLatitude: selectedRide.selectedDestinationLatitude,
+        selectedDestinationLongitude: selectedRide.selectedDestinationLongitude,
+    }
+    );
+    console.log("rideName:", selectedRide.rideName);
+    console.log("startTime:", selectedRide.startTime);
+    console.log("startingPoint:", selectedRide.startingPoint);
+    console.log("destination:", selectedRide.destination);
+    console.log("admin:", selectedRide.admin);
+    console.log("riders:", selectedRide.riders);
+    console.log("selectedStartLatitude:", selectedRide.selectedStartLatitude);
+    console.log("selectedStartLongitude:", selectedRide.selectedStartLongitude);
+    console.log("selectedDestinationLatitude:", selectedRide.selectedDestinationLatitude);
+    console.log("selectedDestinationLongitude:", selectedRide.selectedDestinationLongitude);
   };
 
   const handleRidePress = (ride) => {
