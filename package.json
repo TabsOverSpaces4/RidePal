@@ -23,6 +23,7 @@
     "react-native-gesture-handler": "^2.15.0",
     "react-native-google-places-autocomplete": "^2.5.6",
     "react-native-maps": "^1.11.3",
+    "react-native-maps-directions": "^1.9.0",
     "react-native-paper": "^5.12.3",
     "react-native-picker": "^4.3.7",
     "react-native-reanimated": "^3.8.1",

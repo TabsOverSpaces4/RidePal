@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import config from "../config";
 import LocationList from "./rideList";
+import MapViewDirections from "react-native-maps-directions";
 
 const mapCustomStyle = [
   { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
@@ -93,8 +94,8 @@ const MapviewNav = ({ route }) => {
     rideName,
     yourName,
     numberOfRiders,
-	startingPoint,
-	destination,
+    startingPoint,
+    destination,
     rideDateTime,
     selectedStartLatitude,
     selectedStartLongitude,
@@ -102,35 +103,13 @@ const MapviewNav = ({ route }) => {
     selectedDestinationLongitude,
   } = route.params || {};
   const [coordinates, setCoordinates] = useState([]);
-
-  useEffect(() => {
-    getDirections();
-  }, []);
-
-  const getDirections = async () => {
-    try {
-      const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${selectedStartLatitude},${selectedStartLongitude}&destination=${selectedDestinationLatitude},${selectedDestinationLongitude}&key=${config.googleMapsApiKey}`
-      );
-      const route = response.data.routes[0];
-      const steps = route.legs[0].steps;
-
-      let coords = [];
-      steps.forEach((step) => {
-        coords.push({
-          latitude: step.start_location.lat,
-          longitude: step.start_location.lng,
-        });
-        coords.push({
-          latitude: step.end_location.lat,
-          longitude: step.end_location.lng,
-        });
-      });
-
-      setCoordinates(coords);
-    } catch (error) {
-      console.error("Error fetching directions:", error);
-    }
+  const origin = {
+    latitude: selectedStartLatitude,
+    longitude: selectedStartLongitude,
+  };
+  const findestination = {
+    latitude: selectedDestinationLatitude,
+    longitude: selectedDestinationLongitude,
   };
 
   const data = [
@@ -167,10 +146,9 @@ const MapviewNav = ({ route }) => {
           }}
           title={"Starting Point"}
           description={startingPoint}
-		  titleStyle={{ color: 'blue', fontWeight: 'bold' }} // Style the title
-          descriptionStyle={{ color: 'gray' }} // Style the description
+          titleStyle={{ color: "blue", fontWeight: "bold" }}
+          descriptionStyle={{ color: "gray" }}
           calloutContainerStyle={styles.calloutContainer}
-          
           pinColor={"green"}
         />
         <Marker
@@ -180,16 +158,17 @@ const MapviewNav = ({ route }) => {
           }}
           title={"Destination"}
           pinColor={"red"}
-		  description={destination}
-		  titleStyle={{ color: 'blue', fontWeight: 'bold' }} // Style the title
-          descriptionStyle={{ color: 'gray' }} // Style the description
+          description={destination}
+          titleStyle={{ color: "blue", fontWeight: "bold" }}
+          descriptionStyle={{ color: "gray" }}
           calloutContainerStyle={styles.calloutContainer}
         />
-        <Polyline
-          coordinates={coordinates}
-          strokeColor="#f09142"
+        <MapViewDirections
+          origin={origin}
+          destination={findestination}
           strokeWidth={4}
-          lineCap="round"
+          strokeColor="#ffb300"
+          apikey={config.googleMapsApiKey}
         />
       </MapView>
       <LocationList data={data} />
@@ -216,15 +195,15 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(55, 71, 91, 0.6)",
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 1000, // Ensure the button is above the map
+    zIndex: 1000,
   },
   calloutContainer: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     padding: 10,
     borderRadius: 25,
     elevation: 4,
     borderWidth: 1,
-    borderColor: '#dddddd',
+    borderColor: "#dddddd",
   },
 });
 

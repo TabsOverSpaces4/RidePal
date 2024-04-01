@@ -31,10 +31,8 @@ const ButtonContainer = () => {
   };
 
   const handleJoinRidePress = () => {
-    // toggleJoinRideModal();
-    navigation.navigate("MapviewNavigation")
-
-
+    toggleJoinRideModal();
+    // navigation.navigate("MapviewNavigation")
   };
 
   const handlePlanRide = () => {
@@ -110,10 +108,12 @@ const ButtonContainer = () => {
               <TouchableOpacity
                 style={[
                   modalStyles.modalButton,
-                  (rideName === '' || yourName === '') && { backgroundColor: "gray" }, // Disable button if rideName or yourName is empty
+                  (rideName === "" || yourName === "") && {
+                    backgroundColor: "gray",
+                  }, // Disable button if rideName or yourName is empty
                 ]}
                 onPress={handlePlanRide}
-                disabled={rideName === '' || yourName === ''}
+                disabled={rideName === "" || yourName === ""}
               >
                 <Text style={modalStyles.modalButtonText}>Plan Ride</Text>
               </TouchableOpacity>
@@ -162,40 +162,40 @@ const ButtonContainer = () => {
   );
 };
 const modalStyles = StyleSheet.create({
-	centeredView: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-		// marginTop: 22,
-		backgroundColor: 'rgba(0, 0, 0, 0.4)', // Semi-transparent background color
-	  },
-	  modalView: {
-		backgroundColor: "#242e4c",
-		borderRadius: 20,
-		padding: 20,
-		alignItems: "center",
-		shadowColor: "#000",
-		shadowOffset: {
-		  width: 0,
-		  height: 2,
-		},
-		shadowOpacity: 0.25,
-		shadowRadius: 4,
-		elevation: 5,
-	  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    // marginTop: 22,
+    backgroundColor: "rgba(0, 0, 0, 0.4)", // Semi-transparent background color
+  },
+  modalView: {
+    backgroundColor: "#242e4c",
+    borderRadius: 20,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
   modalTitle: {
     fontSize: 24,
-	color: "white",
+    color: "white",
     fontWeight: "bold",
     marginBottom: 20,
   },
   modalLabel: {
     fontSize: 19,
-	color: "white",
+    color: "white",
     marginBottom: 5,
   },
   input: {
-	fontSize: 16,
+    fontSize: 16,
     height: 40,
     borderColor: "#f09142",
     borderRadius: 20,
@@ -203,7 +203,7 @@ const modalStyles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 10,
     width: "100%",
-	color:"white",
+    color: "white",
   },
   picker: {
     height: 200,
