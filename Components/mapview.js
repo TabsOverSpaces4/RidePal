@@ -42,7 +42,7 @@ const MapViewComponent = ({ route }) => {
     // Effect to fetch rides data from server
     const fetchRides = async () => {
       try {
-        const response = await axios.get(config.mongoLink + "/Rides/Rides"); // Append the collection name to the MongoDB connection string
+        const response = await axios.get(config.mogoLink + "/Rides/Rides"); // Append the collection name to the MongoDB connection string
         console.log("Rides:", response);
       } catch (error) {
         console.error("Error fetching rides:", error);
