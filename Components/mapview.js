@@ -3,6 +3,8 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import ButtonContainer from "./options";
 import { StyleSheet, View } from "react-native";
 import RideList from "./Scheduled";
+import config from "../config";
+import axios from "axios";
 
 function formatDate(dateTimeString) {
   const dateTime = new Date(dateTimeString);
@@ -35,6 +37,21 @@ function formatDate(dateTimeString) {
 const MapViewComponent = ({ route }) => {
   const desiredCoordinates = { latitude: 12.934443, longitude: 77.682991 };
   const markerTitle = "Your Location";
+
+  useEffect(() => {
+    // Effect to fetch rides data from server
+    const fetchRides = async () => {
+      try {
+        const response = await axios.get(config.mongoLink + "/Rides/Rides"); // Append the collection name to the MongoDB connection string
+        console.log("Rides:", response);
+      } catch (error) {
+        console.error("Error fetching rides:", error);
+      }
+    };
+
+    fetchRides(); // Call fetchRides function when component mounts
+  }, []);
+
   const {
     rideName,
     yourName,
@@ -188,7 +205,31 @@ const MapViewComponent = ({ route }) => {
     </View>
   );
 };
-
+// const { MongoClient, ServerApiVersion } = require("mongodb");
+// const uri =
+//   "mongodb+srv://guptaharsh2401:DWXOX5g2Ruw9QA0I@ridingdata.ulmej8e.mongodb.net/?retryWrites=true&w=majority&appName=RidingData";
+// const client = new MongoClient(uri, {
+//   serverApi: {
+//     version: ServerApiVersion.v1,
+//     strict: true,
+//     deprecationErrors: true,
+//   },
+// });
+// async function run() {
+//   try {
+//     // Connect the client to the server	(optional starting in v4.7)
+//     await client.connect();
+//     // Send a ping to confirm a successful connection
+//     await client.db("admin").command({ ping: 1 });
+//     console.log(
+//       "Pinged your deployment. You successfully connected to MongoDB!"
+//     );
+//   } finally {
+//     // Ensures that the client will close when you finish/error
+//     await client.close();
+//   }
+// }
+// run().catch(console.dir);
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React from "react";
+import { View, Text, FlatList, StyleSheet } from "react-native";
 
 const LocationList = ({ data }) => {
   const renderItem = ({ item }) => (
@@ -33,21 +33,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 10,
     paddingTop: 20,
-	width: '100%',
-    maxHeight: '30%',
+    width: "100%",
+    maxHeight: "30%",
   },
   header: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+    fontWeight: "bold",
+    color: "#FFFFFF",
     marginBottom: 10,
   },
   itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#444',
+    borderBottomColor: "#444",
   },
   circle: {
     width: 24,
@@ -59,11 +59,11 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 16,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   distance: {
     fontSize: 14,
-    color: '#CCCCCC',
+    color: "#CCCCCC",
     marginTop: 2,
   },
 });
