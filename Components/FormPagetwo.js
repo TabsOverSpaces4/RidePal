@@ -20,7 +20,37 @@ const FormPagetwo = ({ route }) => {
     console.log("Form cancelled");
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    const formData = {
+      selectedAddress: selectedAddress,
+      rideDateTime: rideDateTime,
+      rideName: rideName,
+      yourName: yourName,
+      numberOfRiders: numberOfRiders,
+      selectedDestinationAddress: selectedDestinationAddress,
+      selectedStartLatitude: selectedStartLatitude,
+      selectedStartLongitude: selectedStartLongitude,
+      selectedDestinationLatitude: selectedDestinationLatitude,
+      selectedDestinationLongitude: selectedDestinationLongitude
+    }
+    try {
+      const response = await fetch('http://localhost:3000/data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        console.log('Data saved successfully');
+        // Do something after successful data submission
+      } else {
+        console.error('Failed to save data');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
     navigation.navigate("Home", {
       selectedAddress: selectedAddress,
       rideDateTime: rideDateTime,
