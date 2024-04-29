@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import ButtonContainer from "./options";
-import { StyleSheet, View } from "react-native";
+import { View, StyleSheet, Modal, Text, TouchableOpacity } from "react-native";
 import RideList from "./Scheduled";
 import config from "../config";
 import axios from "axios";
@@ -38,6 +38,8 @@ const MapViewComponent = ({ route }) => {
   const [focusUserLocation, setFocusUserLocation] = useState(false);
   const desiredCoordinates = { latitude: 12.934443, longitude: 77.682991 };
   const markerTitle = "Your Location";
+  const [modalVisible, setModalVisible] = useState(false);
+  const [rideIdToDelete, setRideIdToDelete] = useState(null);
 
   // useEffect(() => {
   //   // Effect to fetch rides data from server
@@ -93,9 +95,20 @@ const MapViewComponent = ({ route }) => {
     yourName,
     numberOfRiders,
   ]); // Update rides data when specific route params change
-
   const handleDeleteRide = (id) => {
-    setRides((prevRides) => prevRides.filter((ride) => ride.id !== id));
+    setRideIdToDelete(id);
+    setModalVisible(true);
+  };
+
+  const confirmDelete = () => {
+    setRides((prevRides) =>
+      prevRides.filter((ride) => ride.id !== rideIdToDelete)
+    );
+    setModalVisible(false);
+  };
+
+  const cancelDelete = () => {
+    setModalVisible(false);
   };
   const mapCustomStyle = [
     { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
@@ -199,6 +212,34 @@ const MapViewComponent = ({ route }) => {
       </MapView>
       <RideList rides={rides} onDeleteRide={handleDeleteRide} />
       <ButtonContainer />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>
+              Are you sure you want to delete this ride?
+            </Text>
+
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.button} onPress={confirmDelete}>
+                <Text style={styles.buttonText}>Confirm</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={cancelDelete}
+            >
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -211,6 +252,66 @@ const styles = StyleSheet.create({
   map: {
     flex: 1, // Adjusted to occupy remaining space after RideList
     ...StyleSheet.absoluteFillObject, // Ensure MapView covers the entire container
+  },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    backgroundColor: "#242e4c", // Dark background
+    borderRadius: 20,
+    padding: 20,
+    width: "80%", // 80% of the screen width
+    elevation: 5, // Add elevation for a shadow effect
+  },
+  modalTitle: {
+    fontSize: 24,
+    marginBottom: 30,
+    color: "#f0f0f0", // Light text color
+    textAlign: "center",
+  },
+  modalContent: {
+    marginBottom: 20,
+  },
+  modalLabel: {
+    fontSize: 18,
+    color: "#f0f0f0", // Light text color
+    marginBottom: 5,
+  },
+  modalText: {
+    fontSize: 16,
+    color: "#CCCCCC", // Lighter text color
+    marginBottom: 10,
+  },
+
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 15,
+  },
+  button: {
+    backgroundColor: "#f09142",
+    borderRadius: 25,
+    paddingVertical: 12,
+    width: "100%", // Adjust as needed based on your preference
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#ffffff",
+    textAlign: "center",
+  },
+  cancelButton: {
+    // backgroundColor: 'rgba(255, 0, 0, 0.6)', // Adjust the color as needed
+    borderRadius: 10,
+    paddingVertical: 5,
+    // height:,
+  },
+  cancelButtonText: {
+    fontSize: 16,
+    color: "#f09142",
+    textAlign: "center",
   },
 });
 
