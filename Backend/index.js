@@ -1,10 +1,12 @@
+import config from '../config'
+
 const { MongoClient } = require('mongodb');
 const express = require('express');
 const app = express();
 const port = 3000;
 
 // const uri = 'mongodb://localhost:27017'; // MongoDB connection URI
-const uri = 'mongodb+srv://NewHarsh:pwd12345@ridingdata.ulmej8e.mongodb.net/RideRight'
+const uri = config.mogoLink;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 async function connectToDB() {

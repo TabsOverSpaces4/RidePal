@@ -35,6 +35,7 @@ function formatDate(dateTimeString) {
 }
 
 const MapViewComponent = ({ route }) => {
+  const [focusUserLocation, setFocusUserLocation] = useState(false);
   const desiredCoordinates = { latitude: 12.934443, longitude: 77.682991 };
   const markerTitle = "Your Location";
 

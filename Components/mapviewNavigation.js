@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { Component, useState, useEffect, useRef } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import MapView, { Polyline, Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
@@ -102,7 +102,9 @@ const MapviewNav = ({ route }) => {
     selectedDestinationLatitude,
     selectedDestinationLongitude,
   } = route.params || {};
+  const mapRef = useRef(null); 
   const [coordinates, setCoordinates] = useState([]);
+  const [focusUserLocation, setFocusUserLocation] = useState(false);
   const origin = {
     latitude: selectedStartLatitude,
     longitude: selectedStartLongitude,
@@ -113,12 +115,55 @@ const MapviewNav = ({ route }) => {
   };
 
   const data = [
-    { id: 1, color: "red", name: "Vipin Gupta", distance: "1.5 km" },
-    { id: 2, color: "blue", name: "Sarita Gupta", distance: "2.3 km" },
-    { id: 3, color: "green", name: "Ashmita Gupta", distance: "3.1 km" },
+    { id: 1, color: "#e6c79c", name: "Vipin Gupta", distance: "1.5 km" },
+    { id: 2, color: "#78586f", name: "Sarita Gupta", distance: "2.3 km" },
+    { id: 3, color: "#7b9ea8", name: "Ashmita Gupta", distance: "3.1 km" },
+    { id: 3, color: "#ff8686", name: "Mansi Maini", distance: "4.1 km" },
+    { id: 3, color: "#86daff", name: "Eshanika Ray", distance: "5.6 km" },
+    { id: 3, color: "#f5bdff", name: "Manit Nahar", distance: "3.7 km" },
+    { id: 3, color: "#b688ff", name: "Prateek Ganigi", distance: "3.4 km" },
     // Add more data as needed
   ];
   const navigation = useNavigation();
+
+  const handleToggleFocus = () => {
+    if (mapRef.current) {
+      const latitude1 = selectedStartLatitude; // Latitude of the first marker
+      const longitude1 = selectedStartLongitude; // Longitude of the first marker
+      const latitude2 = selectedDestinationLatitude; // Latitude of the second marker
+      const longitude2 = selectedDestinationLongitude; // Longitude of the second marker
+      
+      // Calculate the minimum and maximum latitude and longitude
+      const minLatitude = Math.min(latitude1, latitude2);
+      const maxLatitude = Math.max(latitude1, latitude2);
+      const minLongitude = Math.min(longitude1, longitude2);
+      const maxLongitude = Math.max(longitude1, longitude2);
+  
+      // Calculate the center latitude and longitude
+      const centerLatitude = (minLatitude + maxLatitude) / 2 - .17;
+      const centerLongitude = (minLongitude + maxLongitude) / 2;
+  
+      // Calculate the delta values for zooming
+      const latitudeDelta = maxLatitude - minLatitude + 0.55; // Add some padding
+      const longitudeDelta = maxLongitude - minLongitude + 0.1; // Add some padding
+  
+      // Animate the map to the calculated region
+      // Construct the camera object
+    const camera = {
+      center: {
+        latitude: centerLatitude,
+        longitude: centerLongitude,
+      },
+      pitch: 0,
+      heading: 0,
+      altitude: 1000, // Zoom altitude
+      zoom: 10, // Zoom level
+    };
+
+    // Animate the camera to the calculated region
+    mapRef.current.animateCamera(camera, { duration: 1000 });
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -129,6 +174,9 @@ const MapviewNav = ({ route }) => {
         <Ionicons name="arrow-back" size={24} color="white" />
       </TouchableOpacity>
       <MapView
+      ref={mapRef}
+        showsUserLocation
+        // showsMyLocationButton
         customMapStyle={mapCustomStyle}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
@@ -171,7 +219,7 @@ const MapviewNav = ({ route }) => {
           apikey={config.googleMapsApiKey}
         />
       </MapView>
-      <LocationList data={data} />
+      <LocationList data={data} onToggleFocus={handleToggleFocus} />
     </View>
   );
 };
@@ -201,7 +249,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     padding: 10,
     borderRadius: 25,
-    elevation: 4,
+    elevation: 1,
     borderWidth: 1,
     borderColor: "#dddddd",
   },
