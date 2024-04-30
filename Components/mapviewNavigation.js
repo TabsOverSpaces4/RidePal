@@ -1,12 +1,13 @@
 import React, { Component, useState, useEffect, useRef } from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
-import MapView, { Polyline, Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { Image, View, StyleSheet, TouchableOpacity } from "react-native";
+import MapView, {Callout, Polyline, Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import config from "../config";
 import LocationList from "./rideList";
 import MapViewDirections from "react-native-maps-directions";
+import CustomCallout from "./CustomCallout";
 
 const mapCustomStyle = [
   { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
@@ -102,7 +103,7 @@ const MapviewNav = ({ route }) => {
     selectedDestinationLatitude,
     selectedDestinationLongitude,
   } = route.params || {};
-  const mapRef = useRef(null); 
+  const mapRef = useRef(null);
   const [coordinates, setCoordinates] = useState([]);
   const [focusUserLocation, setFocusUserLocation] = useState(false);
   const origin = {
@@ -132,36 +133,36 @@ const MapviewNav = ({ route }) => {
       const longitude1 = selectedStartLongitude; // Longitude of the first marker
       const latitude2 = selectedDestinationLatitude; // Latitude of the second marker
       const longitude2 = selectedDestinationLongitude; // Longitude of the second marker
-      
+
       // Calculate the minimum and maximum latitude and longitude
       const minLatitude = Math.min(latitude1, latitude2);
       const maxLatitude = Math.max(latitude1, latitude2);
       const minLongitude = Math.min(longitude1, longitude2);
       const maxLongitude = Math.max(longitude1, longitude2);
-  
+
       // Calculate the center latitude and longitude
-      const centerLatitude = (minLatitude + maxLatitude) / 2 - .17;
+      const centerLatitude = (minLatitude + maxLatitude) / 2 - 0.17;
       const centerLongitude = (minLongitude + maxLongitude) / 2;
-  
+
       // Calculate the delta values for zooming
       const latitudeDelta = maxLatitude - minLatitude + 0.55; // Add some padding
       const longitudeDelta = maxLongitude - minLongitude + 0.1; // Add some padding
-  
+
       // Animate the map to the calculated region
       // Construct the camera object
-    const camera = {
-      center: {
-        latitude: centerLatitude,
-        longitude: centerLongitude,
-      },
-      pitch: 0,
-      heading: 0,
-      altitude: 1000, // Zoom altitude
-      zoom: 10, // Zoom level
-    };
+      const camera = {
+        center: {
+          latitude: centerLatitude,
+          longitude: centerLongitude,
+        },
+        pitch: 0,
+        heading: 0,
+        altitude: 1000, // Zoom altitude
+        zoom: 10, // Zoom level
+      };
 
-    // Animate the camera to the calculated region
-    mapRef.current.animateCamera(camera, { duration: 1000 });
+      // Animate the camera to the calculated region
+      mapRef.current.animateCamera(camera, { duration: 1000 });
     }
   };
 
@@ -174,7 +175,7 @@ const MapviewNav = ({ route }) => {
         <Ionicons name="arrow-back" size={24} color="white" />
       </TouchableOpacity>
       <MapView
-      ref={mapRef}
+        ref={mapRef}
         showsUserLocation
         // showsMyLocationButton
         customMapStyle={mapCustomStyle}
@@ -192,25 +193,45 @@ const MapviewNav = ({ route }) => {
             latitude: selectedStartLatitude,
             longitude: selectedStartLongitude,
           }}
-          title={"Starting Point"}
-          description={startingPoint}
-          titleStyle={{ color: "blue", fontWeight: "bold" }}
-          descriptionStyle={{ color: "gray" }}
-          calloutContainerStyle={styles.calloutContainer}
-          pinColor={"green"}
-        />
+          
+        > 
+        <View style={{ width: 40, height: 40 }}>
+          <Image
+            source={require("../assets/Markers/start.png")} 
+            style={{ width: 40, height: 40 }}
+          />
+        </View>
+        <Callout tooltip>
+          <View style={styles.calloutContainer}> 
+            <CustomCallout title="Starting Point" subtitle={startingPoint} />
+            </View>
+         
+        </Callout>
+        </Marker>
         <Marker
           coordinate={{
             latitude: selectedDestinationLatitude,
             longitude: selectedDestinationLongitude,
           }}
           title={"Destination"}
-          pinColor={"red"}
           description={destination}
           titleStyle={{ color: "blue", fontWeight: "bold" }}
           descriptionStyle={{ color: "gray" }}
           calloutContainerStyle={styles.calloutContainer}
-        />
+        > 
+        <View style={{ width: 40, height: 40 }}>
+          <Image
+            source={require("../assets/Markers/end.png")} 
+            style={{ width: 40, height: 40 }}
+          />
+        </View>
+        <Callout tooltip>
+          <View style={styles.calloutContainer}> 
+            <CustomCallout title="Destination" subtitle={destination} />
+            </View>
+         
+        </Callout>
+        </Marker>
         <MapViewDirections
           origin={origin}
           destination={findestination}
@@ -246,13 +267,8 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   calloutContainer: {
-    backgroundColor: "#ffffff",
-    padding: 10,
-    borderRadius: 25,
-    elevation: 1,
-    borderWidth: 1,
-    borderColor: "#dddddd",
-  },
+    backgroundColor: 'transparent',
+  }
 });
 
 export default MapviewNav;

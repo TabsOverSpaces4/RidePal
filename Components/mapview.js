@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import React, {useState, useEffect } from "react";
+import MapView, {Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import ButtonContainer from "./options";
-import { View, StyleSheet, Modal, Text, TouchableOpacity } from "react-native";
+import {Image, View, StyleSheet, Modal, Text, TouchableOpacity } from "react-native";
 import RideList from "./Scheduled";
+import CustomCallout from "./CustomCallout";
 import config from "../config";
 import axios from "axios";
+
 
 function formatDate(dateTimeString) {
   const dateTime = new Date(dateTimeString);
@@ -109,6 +111,7 @@ const MapViewComponent = ({ route }) => {
 
   const cancelDelete = () => {
     setModalVisible(false);
+    console.log("Deleted Ride");
   };
   const mapCustomStyle = [
     { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
@@ -208,7 +211,20 @@ const MapViewComponent = ({ route }) => {
           longitudeDelta: 0.0421,
         }}
       >
-        <Marker coordinate={desiredCoordinates} title={markerTitle} />
+        <Marker coordinate={desiredCoordinates} title={markerTitle}>
+        <View style={{ width: 40, height: 40 }}>
+          <Image
+            source={require("../assets/Markers/start.png")} // Change the path to your PNG image
+            style={{ width: 40, height: 40 }}
+          />
+        </View>
+        <Callout tooltip>
+          <View style={styles.calloutContainer}> 
+            <CustomCallout title="Your Location" subtitle="Subtitle" />
+            </View>
+         
+        </Callout>
+      </Marker>
       </MapView>
       <RideList rides={rides} onDeleteRide={handleDeleteRide} />
       <ButtonContainer />
@@ -313,6 +329,9 @@ const styles = StyleSheet.create({
     color: "#f09142",
     textAlign: "center",
   },
+  calloutContainer: {
+    backgroundColor: 'transparent',
+  }
 });
 
 export default MapViewComponent;
