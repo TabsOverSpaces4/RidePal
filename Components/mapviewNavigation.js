@@ -119,10 +119,10 @@ const MapviewNav = ({ route }) => {
     { id: 1, color: "#e6c79c", name: "Vipin Gupta", distance: "1.5 km" },
     { id: 2, color: "#78586f", name: "Sarita Gupta", distance: "2.3 km" },
     { id: 3, color: "#7b9ea8", name: "Ashmita Gupta", distance: "3.1 km" },
-    { id: 3, color: "#ff8686", name: "Mansi Maini", distance: "4.1 km" },
-    { id: 3, color: "#86daff", name: "Eshanika Ray", distance: "5.6 km" },
-    { id: 3, color: "#f5bdff", name: "Manit Nahar", distance: "3.7 km" },
-    { id: 3, color: "#b688ff", name: "Prateek Ganigi", distance: "3.4 km" },
+    { id: 4, color: "#ff8686", name: "Mansi Maini", distance: "4.1 km" },
+    { id: 5, color: "#86daff", name: "Eshanika Ray", distance: "5.6 km" },
+    { id: 6, color: "#f5bdff", name: "Manit Nahar", distance: "3.7 km" },
+    { id: 7, color: "#b688ff", name: "Prateek Ganigi", distance: "3.4 km" },
     // Add more data as needed
   ];
   const navigation = useNavigation();
