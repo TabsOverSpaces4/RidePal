@@ -1,6 +1,19 @@
 import React, { Component, useState, useEffect, useRef } from "react";
-import { Image, View, StyleSheet, TouchableOpacity } from "react-native";
-import MapView, {Callout, Polyline, Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import {
+  Image,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  Text,
+  Linking,
+} from "react-native";
+import MapView, {
+  Callout,
+  Polyline,
+  Marker,
+  PROVIDER_GOOGLE,
+} from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
@@ -95,6 +108,7 @@ const MapviewNav = ({ route }) => {
     rideName,
     yourName,
     numberOfRiders,
+    startTime,
     startingPoint,
     destination,
     rideDateTime,
@@ -106,6 +120,8 @@ const MapviewNav = ({ route }) => {
   const mapRef = useRef(null);
   const [coordinates, setCoordinates] = useState([]);
   const [focusUserLocation, setFocusUserLocation] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
   const origin = {
     latitude: selectedStartLatitude,
     longitude: selectedStartLongitude,
@@ -165,11 +181,30 @@ const MapviewNav = ({ route }) => {
       mapRef.current.animateCamera(camera, { duration: 1000 });
     }
   };
+  const onCalloutPressed = () => {
+    console.log("pressed");
+    setModalVisible(true);
+  };
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
+  const onNavigatePress = () => {
+    const latitude = selectedStartLatitude;
+    const longitude = selectedStartLongitude;
+    const url = `https://www.google.com/maps/place/${latitude},${longitude}`;
+
+    setModalVisible(false); // Close the modal
+
+    Linking.openURL(url).catch((err) =>
+      console.error("Error opening URL:", err)
+    );
+  };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={styles.button}
+        style={styles.backButton}
         onPress={() => navigation.goBack()}
       >
         <Ionicons name="arrow-back" size={24} color="white" />
@@ -193,20 +228,22 @@ const MapviewNav = ({ route }) => {
             latitude: selectedStartLatitude,
             longitude: selectedStartLongitude,
           }}
-          
-        > 
-        <View style={{ width: 40, height: 40 }}>
-          <Image
-            source={require("../assets/Markers/start.png")} 
-            style={{ width: 40, height: 40 }}
-          />
-        </View>
-        <Callout tooltip>
-          <View style={styles.calloutContainer}> 
-            <CustomCallout title="Starting Point" subtitle={startingPoint} />
+        >
+          <View style={{ width: 40, height: 40 }}>
+            <Image
+              source={require("../assets/Markers/start.png")}
+              style={{ width: 40, height: 40 }}
+            />
+          </View>
+          <Callout onPress={onCalloutPressed} tooltip>
+            <View style={styles.calloutContainer}>
+              <CustomCallout
+                title="Starting Point"
+                subtitle={startingPoint}
+                link="YOUR_LINK_HERE"
+              />
             </View>
-         
-        </Callout>
+          </Callout>
         </Marker>
         <Marker
           coordinate={{
@@ -218,19 +255,22 @@ const MapviewNav = ({ route }) => {
           titleStyle={{ color: "blue", fontWeight: "bold" }}
           descriptionStyle={{ color: "gray" }}
           calloutContainerStyle={styles.calloutContainer}
-        > 
-        <View style={{ width: 40, height: 40 }}>
-          <Image
-            source={require("../assets/Markers/end.png")} 
-            style={{ width: 40, height: 40 }}
-          />
-        </View>
-        <Callout tooltip>
-          <View style={styles.calloutContainer}> 
-            <CustomCallout title="Destination" subtitle={destination} />
+        >
+          <View style={{ width: 40, height: 40 }}>
+            <Image
+              source={require("../assets/Markers/end.png")}
+              style={{ width: 40, height: 40 }}
+            />
+          </View>
+          <Callout tooltip>
+            <View style={styles.calloutContainer}>
+              <CustomCallout
+                title="Destination"
+                subtitle={destination}
+                link="YOUR_LINK_HERE"
+              />
             </View>
-         
-        </Callout>
+          </Callout>
         </Marker>
         <MapViewDirections
           origin={origin}
@@ -241,6 +281,40 @@ const MapviewNav = ({ route }) => {
         />
       </MapView>
       <LocationList data={data} onToggleFocus={handleToggleFocus} />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={stylesModal.modalBackground}>
+          <View style={stylesModal.modalContainer}>
+            <Text style={stylesModal.modalTitle}>Starting Point</Text>
+            <View style={stylesModal.modalContent}>
+              <Text style={stylesModal.modalLabel}>Start Time</Text>
+              <Text style={stylesModal.modalText}>{startTime}</Text>
+              <Text style={stylesModal.modalLabel}>Address</Text>
+              <Text style={stylesModal.modalText}>{startingPoint}</Text>
+            </View>
+            <View style={stylesModal.buttonContainer}>
+              <TouchableOpacity
+                style={stylesModal.button}
+                onPress={onNavigatePress}
+              >
+                <Text style={stylesModal.buttonText}>Navigate</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              style={stylesModal.cancelButton}
+              onPress={closeModal}
+            >
+              <Text style={stylesModal.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -254,7 +328,7 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-  button: {
+  backButton: {
     position: "absolute",
     top: "6%",
     left: "2%",
@@ -267,8 +341,83 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   calloutContainer: {
-    backgroundColor: 'transparent',
-  }
+    backgroundColor: "transparent",
+  },
+  button: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  logo: {
+    width: 24,
+    height: 24,
+    marginRight: 8,
+  },
+  buttonText: {
+    fontSize: 16,
+    color: "#FFFFFF",
+  },
+});
+const stylesModal = StyleSheet.create({
+  modalBackground: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    backgroundColor: "#242e4c", // Dark background
+    borderRadius: 20,
+    padding: 20,
+    width: "80%", // 80% of the screen width
+    elevation: 5, // Add elevation for a shadow effect
+  },
+  modalTitle: {
+    fontSize: 24,
+    marginBottom: 30,
+    color: "#f0f0f0", // Light text color
+    textAlign: "center",
+  },
+  modalContent: {
+    marginBottom: 20,
+  },
+  modalLabel: {
+    fontSize: 18,
+    color: "#f0f0f0", // Light text color
+    marginBottom: 5,
+  },
+  modalText: {
+    fontSize: 16,
+    color: "#CCCCCC", // Lighter text color
+    marginBottom: 10,
+  },
+
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 15,
+  },
+  button: {
+    backgroundColor: "#f09142",
+    borderRadius: 25,
+    paddingVertical: 12,
+    width: "100%", // Adjust as needed based on your preference
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#ffffff",
+    textAlign: "center",
+  },
+  cancelButton: {
+    // backgroundColor: 'rgba(255, 0, 0, 0.6)', // Adjust the color as needed
+    borderRadius: 10,
+    paddingVertical: 5,
+    // height:,
+  },
+  cancelButtonText: {
+    fontSize: 16,
+    color: "#f09142",
+    textAlign: "center",
+  },
 });
 
 export default MapviewNav;
