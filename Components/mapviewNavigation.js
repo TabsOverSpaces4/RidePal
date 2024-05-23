@@ -105,6 +105,7 @@ const mapCustomStyle = [
 
 const MapviewNav = ({ route }) => {
   const {
+    rideId,
     rideName,
     yourName,
     numberOfRiders,
@@ -121,6 +122,7 @@ const MapviewNav = ({ route }) => {
   const [coordinates, setCoordinates] = useState([]);
   const [focusUserLocation, setFocusUserLocation] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [otherRiders, setOtherRiders] = useState([]);
 
   const origin = {
     latitude: selectedStartLatitude,
@@ -131,6 +133,41 @@ const MapviewNav = ({ route }) => {
     longitude: selectedDestinationLongitude,
   };
 
+  const fetchDataById = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3000/data/${id}`);
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Fetched data:", data);
+        return data;
+      } else {
+        console.error(
+          "Failed to fetch data",
+          response.status,
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+  };
+  // console.log("rideid:", rideId);
+  useEffect(async () => {
+    const resp = await fetchDataById(rideId);
+    console.log(resp.otherRiders);
+
+    const riders = resp.otherRiders.map((rider, index) => {
+      return {
+        id: index,
+        color: "78586f",
+        name: rider.name,
+        distance: "2.5km",
+      };
+    });
+    setOtherRiders(riders);
+    console.log(riders);
+  }, []);
   const data = [
     { id: 1, color: "#e6c79c", name: "Vipin Gupta", distance: "1.5 km" },
     { id: 2, color: "#78586f", name: "Sarita Gupta", distance: "2.3 km" },
@@ -145,10 +182,10 @@ const MapviewNav = ({ route }) => {
 
   const handleToggleFocus = () => {
     if (mapRef.current) {
-      const latitude1 = selectedStartLatitude; // Latitude of the first marker
-      const longitude1 = selectedStartLongitude; // Longitude of the first marker
-      const latitude2 = selectedDestinationLatitude; // Latitude of the second marker
-      const longitude2 = selectedDestinationLongitude; // Longitude of the second marker
+      const latitude1 = selectedStartLatitude;
+      const longitude1 = selectedStartLongitude;
+      const latitude2 = selectedDestinationLatitude;
+      const longitude2 = selectedDestinationLongitude;
 
       // Calculate the minimum and maximum latitude and longitude
       const minLatitude = Math.min(latitude1, latitude2);
@@ -161,10 +198,9 @@ const MapviewNav = ({ route }) => {
       const centerLongitude = (minLongitude + maxLongitude) / 2;
 
       // Calculate the delta values for zooming
-      const latitudeDelta = maxLatitude - minLatitude + 0.55; // Add some padding
-      const longitudeDelta = maxLongitude - minLongitude + 0.1; // Add some padding
+      const latitudeDelta = maxLatitude - minLatitude + 0.55;
+      const longitudeDelta = maxLongitude - minLongitude + 0.1;
 
-      // Animate the map to the calculated region
       // Construct the camera object
       const camera = {
         center: {
@@ -173,8 +209,8 @@ const MapviewNav = ({ route }) => {
         },
         pitch: 0,
         heading: 0,
-        altitude: 1000, // Zoom altitude
-        zoom: 10, // Zoom level
+        altitude: 1000,
+        zoom: 10,
       };
 
       // Animate the camera to the calculated region
@@ -280,7 +316,7 @@ const MapviewNav = ({ route }) => {
           apikey={config.googleMapsApiKey}
         />
       </MapView>
-      <LocationList data={data} onToggleFocus={handleToggleFocus} />
+      <LocationList data={otherRiders} onToggleFocus={handleToggleFocus} />
       <Modal
         animationType="slide"
         transparent={true}

@@ -1,5 +1,11 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 
 const LocationList = ({ data, onToggleFocus }) => {
   const renderItem = ({ item }) => (
@@ -21,7 +27,7 @@ const LocationList = ({ data, onToggleFocus }) => {
       <FlatList
         data={data}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
       />
@@ -33,7 +39,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "rgba(55, 71, 91, 0.8)",
     width: "100%",
-    height:'30%',
+    height: "30%",
     position: "absolute",
     bottom: 0,
     borderTopLeftRadius: 16,

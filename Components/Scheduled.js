@@ -76,6 +76,7 @@ const RideList = ({ rides, onDeleteRide }) => {
   const rideNow = () => {
     setModalVisible(false);
     navigation.navigate("MapviewNavigation", {
+      rideId: selectedRide.rideId,
       rideName: selectedRide.rideName,
       startTime: selectedRide.startTime,
       startingPoint: selectedRide.startingPoint,
@@ -126,7 +127,7 @@ const RideList = ({ rides, onDeleteRide }) => {
         <FlatList
           data={rides}
           renderItem={renderRideItem}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
         />
       )}
       <Modal

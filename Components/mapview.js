@@ -69,6 +69,7 @@ const MapViewComponent = ({ route }) => {
   // }, []);
 
   const {
+    rideId,
     rideName,
     yourName,
     numberOfRiders,
@@ -86,7 +87,7 @@ const MapViewComponent = ({ route }) => {
     // Effect to update rides data when route params change
     if (route.params) {
       const newRide = {
-        id: rides.length + 1, // Generate unique ID for the new ride
+        rideId: rideId, // Generate unique ID for the new ride
         rideName: rideName,
         startTime: formatDate(rideDateTime),
         startingPoint: selectedAddress,
@@ -99,6 +100,7 @@ const MapViewComponent = ({ route }) => {
         selectedDestinationLongitude: selectedDestinationLongitude,
       };
       setRides((prevRides) => [...prevRides, newRide]); // Add new ride to rides state
+      console.log("Console IDDDDDD: ", rideId.insertedId);
     }
   }, [
     rideName,
@@ -112,6 +114,38 @@ const MapViewComponent = ({ route }) => {
     setRideIdToDelete(id);
     setModalVisible(true);
   };
+
+  const removeRider = async (rideId, riderName) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/data/${rideId}/rider/${riderName}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log("Rider removed successfully", responseData);
+      } else {
+        const errorText = await response.text();
+        console.error(
+          "Failed to remove rider",
+          response.status,
+          response.statusText,
+          errorText
+        );
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+  };
+
+  // Example usage
+  // removeRider("60b8d295f8b4b9c9b7c5d8e9", "New Rider");
 
   const confirmDelete = () => {
     setRides((prevRides) =>
@@ -206,8 +240,8 @@ const MapViewComponent = ({ route }) => {
   ];
 
   const onCalloutPressed = () => {
-    console.log('pressed')
-  }
+    console.log("pressed");
+  };
 
   return (
     <View style={styles.container}>
@@ -226,11 +260,8 @@ const MapViewComponent = ({ route }) => {
           longitudeDelta: 0.0421,
         }}
       >
-        <Marker
-           coordinate={desiredCoordinates}
-        >
-        
-          <View  style={{ width: 40, height: 40 }}>
+        <Marker coordinate={desiredCoordinates}>
+          <View style={{ width: 40, height: 40 }}>
             <Image
               source={require("../assets/Markers/start.png")}
               style={{ width: 40, height: 40 }}
@@ -239,7 +270,7 @@ const MapViewComponent = ({ route }) => {
           <Callout onPress={onCalloutPressed} tooltip>
             <CustomCallout
               title="Your Location"
-              subtitle='Subtitle'
+              subtitle="Subtitle"
               link="YOUR_LINK_HERE"
             />
           </Callout>

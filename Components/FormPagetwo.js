@@ -6,19 +6,35 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import config from "../config";
 
 const FormPagetwo = ({ route }) => {
-  const [selectedDestinationLatitude, setSelectedDestinationLatitude] = useState("");
-  const [selectedDestinationLongitude, setSelectedDestinationLongitude] = useState("");
+  const [selectedDestinationLatitude, setSelectedDestinationLatitude] =
+    useState("");
+  const [selectedDestinationLongitude, setSelectedDestinationLongitude] =
+    useState("");
   const [selectedDestinationAddress, setSelectedDestinationAddress] =
     useState("");
   const navigation = useNavigation();
   const placeDetailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?placeid=<span class="math-inline">\{details\.place\_id\}&key\=</span>{config.googleMapsApiKey}`;
-  const { rideName, yourName, numberOfRiders, selectedAddress, rideDateTime, selectedStartLatitude, selectedStartLongitude } =
-    route.params;
+  const {
+    rideName,
+    yourName,
+    numberOfRiders,
+    selectedAddress,
+    rideDateTime,
+    selectedStartLatitude,
+    selectedStartLongitude,
+  } = route.params;
 
   const handleCancel = () => {
     navigation.goBack();
     console.log("Form cancelled");
   };
+
+  // // Example usage
+  // updateRideData("60b8d295f8b4b9c9b7c5d8e9", {
+  //   name: "New Rider",
+  //   age: 25,
+  //   experience: "Intermediate",
+  // });
 
   const handleNext = async () => {
     const formData = {
@@ -31,38 +47,41 @@ const FormPagetwo = ({ route }) => {
       selectedStartLatitude: selectedStartLatitude,
       selectedStartLongitude: selectedStartLongitude,
       selectedDestinationLatitude: selectedDestinationLatitude,
-      selectedDestinationLongitude: selectedDestinationLongitude
-    }
+      selectedDestinationLongitude: selectedDestinationLongitude,
+    };
     try {
-      const response = await fetch('http://localhost:3000/data', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3000/data", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        console.log('Data saved successfully');
+        const rideId = await response.json();
+        console.log("resp", rideId);
+        navigation.navigate("Home", {
+          rideId: rideId,
+          selectedAddress: selectedAddress,
+          rideDateTime: rideDateTime,
+          rideName: rideName,
+          yourName: yourName,
+          numberOfRiders: numberOfRiders,
+          selectedDestinationAddress: selectedDestinationAddress,
+          selectedStartLatitude: selectedStartLatitude,
+          selectedStartLongitude: selectedStartLongitude,
+          selectedDestinationLatitude: selectedDestinationLatitude,
+          selectedDestinationLongitude: selectedDestinationLongitude,
+        });
+
         // Do something after successful data submission
       } else {
-        console.error('Failed to save data');
+        console.error("Failed to save data");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
-    navigation.navigate("Home", {
-      selectedAddress: selectedAddress,
-      rideDateTime: rideDateTime,
-      rideName: rideName,
-      yourName: yourName,
-      numberOfRiders: numberOfRiders,
-      selectedDestinationAddress: selectedDestinationAddress,
-      selectedStartLatitude: selectedStartLatitude,
-      selectedStartLongitude: selectedStartLongitude,
-      selectedDestinationLatitude: selectedDestinationLatitude,
-      selectedDestinationLongitude: selectedDestinationLongitude
-    });
   };
 
   return (
@@ -74,22 +93,23 @@ const FormPagetwo = ({ route }) => {
           if (details) {
             // Extract placeID from details
             const placeId = details.place_id;
-    
-            // Make a separate API call to get details including lat and lng
-            fetch(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&key=${config.googleMapsApiKey}`)
-                .then(response => response.json())
-                .then(data => {
-                    const { lat, lng } = data.result.geometry.location;
-            setSelectedDestinationLatitude(lat);
-            setSelectedDestinationLongitude(lng);
 
-                })
-                .catch(error => console.error(error));
-    
-                setSelectedDestinationAddress(data.description);
-        } else {
+            // Make a separate API call to get details including lat and lng
+            fetch(
+              `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&key=${config.googleMapsApiKey}`
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                const { lat, lng } = data.result.geometry.location;
+                setSelectedDestinationLatitude(lat);
+                setSelectedDestinationLongitude(lng);
+              })
+              .catch((error) => console.error(error));
+
+            setSelectedDestinationAddress(data.description);
+          } else {
             console.log("Details not yet available");
-        }
+          }
         }}
         query={{
           key: config.googleMapsApiKey,

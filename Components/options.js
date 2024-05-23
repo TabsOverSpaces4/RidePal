@@ -30,8 +30,43 @@ const ButtonContainer = () => {
     toggleNewRideModal();
   };
 
+  const updateRideData = async (id, rider) => {
+    console.log("Func");
+    try {
+      const response = await fetch(`http://localhost:3000/data/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: rider }),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log("Update successful", responseData);
+        return responseData.message;
+      } else {
+        const responseData = await response.json();
+        console.error("Update failed", response.status, response.statusText);
+        return responseData.message;
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+      return response.status(500);
+    }
+  };
   const handleJoinRidePress = () => {
     toggleJoinRideModal();
+  };
+  const handleJoinRideConfirm = async () => {
+    const joinRide = await updateRideData(rideName, yourName);
+    // if (joinRide.status == 200) {
+    console.log(joinRide);
+    toggleJoinRideModal();
+    console.log(yourName, rideName);
+    // } else {
+    // console.log("Failed");
+    // }
     // navigation.navigate("MapviewNavigation")
   };
 
@@ -150,7 +185,7 @@ const ButtonContainer = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={modalStyles.modalButton}
-                onPress={toggleJoinRideModal}
+                onPress={handleJoinRideConfirm}
               >
                 <Text style={modalStyles.modalButtonText}>Join Ride</Text>
               </TouchableOpacity>
