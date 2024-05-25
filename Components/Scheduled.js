@@ -10,6 +10,34 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
+function formatDate(dateTimeString) {
+  const dateTime = new Date(dateTimeString);
+  const day = dateTime.getDate().toString().padStart(2, "0");
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const monthIndex = dateTime.getMonth();
+  const year = dateTime.getFullYear();
+  let hours = dateTime.getHours();
+  const minutes = dateTime.getMinutes().toString().padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12;
+  hours = hours ? hours : 12; // Handle midnight (0 hours)
+  const formattedDateTime = `${hours}:${minutes} ${ampm} ${day} ${monthNames[monthIndex]} ${year}`;
+  return formattedDateTime;
+}
+
 const RideList = ({ rides, onDeleteRide }) => {
   const [selectedRide, setSelectedRide] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -25,7 +53,7 @@ const RideList = ({ rides, onDeleteRide }) => {
           <View style={styles.rideInfoContainer}>
             <Text style={styles.label}>Start Time:</Text>
             <Text numberOfLines={1} style={styles.rideInfo}>
-              {item.startTime}
+              {item.rideDateTime}
             </Text>
           </View>
           <View style={styles.rideInfoContainer}>
@@ -35,7 +63,7 @@ const RideList = ({ rides, onDeleteRide }) => {
               ellipsizeMode="tail"
               style={styles.rideInfo}
             >
-              {item.startingPoint}
+              {item.selectedAddress}
             </Text>
           </View>
           <View style={styles.rideInfoContainer}>
@@ -45,18 +73,22 @@ const RideList = ({ rides, onDeleteRide }) => {
               ellipsizeMode="tail"
               style={styles.rideInfo}
             >
-              {item.destination}
+              {item.selectedDestinationAddress}
             </Text>
           </View>
         </View>
-        {/* Right side: admin, riders, and image */}
+        {/* Right side: yourName, numberOfRiders, and image */}
         <View style={styles.rightContainer}>
           <Image
             source={require("../assets/helmet.png")}
             style={styles.image}
           />
-          <Text style={styles.additionalText}>{`Admin: ${item.admin}`}</Text>
-          <Text style={styles.additionalText}>{`Riders: ${item.riders}`}</Text>
+          <Text
+            style={styles.additionalText}
+          >{`yourName: ${item.yourName}`}</Text>
+          <Text
+            style={styles.additionalText}
+          >{`numberOfRiders: ${item.numberOfRiders}`}</Text>
           <TouchableOpacity onPress={() => onDeleteRide(item.id)}>
             <Image
               source={require("../assets/trash.png")}
@@ -78,22 +110,25 @@ const RideList = ({ rides, onDeleteRide }) => {
     navigation.navigate("MapviewNavigation", {
       rideId: selectedRide.rideId,
       rideName: selectedRide.rideName,
-      startTime: selectedRide.startTime,
-      startingPoint: selectedRide.startingPoint,
-      destination: selectedRide.destination,
-      admin: selectedRide.admin,
-      riders: selectedRide.riders,
+      rideDateTime: formatDate(selectedRide.rideDateTime),
+      selectedAddress: selectedRide.selectedAddress,
+      selectedDestinationAddress: selectedRide.selectedDestinationAddress,
+      yourName: selectedRide.yourName,
+      numberOfRiders: selectedRide.numberOfRiders,
       selectedStartLatitude: selectedRide.selectedStartLatitude,
       selectedStartLongitude: selectedRide.selectedStartLongitude,
       selectedDestinationLatitude: selectedRide.selectedDestinationLatitude,
       selectedDestinationLongitude: selectedRide.selectedDestinationLongitude,
     });
     console.log("rideName:", selectedRide.rideName);
-    console.log("startTime:", selectedRide.startTime);
-    console.log("startingPoint:", selectedRide.startingPoint);
-    console.log("destination:", selectedRide.destination);
-    console.log("admin:", selectedRide.admin);
-    console.log("riders:", selectedRide.riders);
+    console.log("rideDateTime:", selectedRide.rideDateTime);
+    console.log("selectedAddress:", selectedRide.selectedAddress);
+    console.log(
+      "selectedDestinationAddress:",
+      selectedRide.selectedDestinationAddress
+    );
+    console.log("yourName:", selectedRide.yourName);
+    console.log("numberOfRiders:", selectedRide.numberOfRiders);
     console.log("selectedStartLatitude:", selectedRide.selectedStartLatitude);
     console.log("selectedStartLongitude:", selectedRide.selectedStartLongitude);
     console.log(
@@ -146,15 +181,15 @@ const RideList = ({ rides, onDeleteRide }) => {
             <View style={styles.modalContent}>
               <Text style={styles.modalLabel}>Start Time:</Text>
               <Text style={styles.modalText}>
-                {selectedRide ? selectedRide.startTime : ""}
+                {selectedRide ? selectedRide.rideDateTime : ""}
               </Text>
               <Text style={styles.modalLabel}>From:</Text>
               <Text style={styles.modalText}>
-                {selectedRide ? selectedRide.startingPoint : ""}
+                {selectedRide ? selectedRide.selectedAddress : ""}
               </Text>
               <Text style={styles.modalLabel}>To:</Text>
               <Text style={styles.modalText}>
-                {selectedRide ? selectedRide.destination : ""}
+                {selectedRide ? selectedRide.selectedDestinationAddress : ""}
               </Text>
             </View>
             <View style={styles.buttonContainer}>

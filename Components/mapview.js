@@ -89,11 +89,11 @@ const MapViewComponent = ({ route }) => {
       const newRide = {
         rideId: rideId, // Generate unique ID for the new ride
         rideName: rideName,
-        startTime: formatDate(rideDateTime),
-        startingPoint: selectedAddress,
-        destination: selectedDestinationAddress,
-        admin: yourName,
-        riders: numberOfRiders,
+        rideDateTime: formatDate(rideDateTime),
+        selectedAddress: selectedAddress,
+        selectedDestinationAddress: selectedDestinationAddress,
+        yourName: yourName,
+        numberOfRiders: numberOfRiders,
         selectedStartLatitude: selectedStartLatitude,
         selectedStartLongitude: selectedStartLongitude,
         selectedDestinationLatitude: selectedDestinationLatitude,
@@ -144,9 +144,51 @@ const MapViewComponent = ({ route }) => {
     }
   };
 
-  // Example usage
-  // removeRider("60b8d295f8b4b9c9b7c5d8e9", "New Rider");
+  const fetchDataById = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3000/data/${id}`);
 
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Fetched data:", data);
+        // Update rides state with fetched data
+        setRides((prevRides) => [...prevRides, data]); // Assuming the fetched data is an individual ride
+      } else {
+        console.error(
+          "Failed to fetch data",
+          response.status,
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Call fetchDataById when the component mounts
+    fetchDataById(rideId); // Replace 'yourId' with the appropriate ID
+  }, []); // Empty dependency array to run only once on mount
+
+  useEffect(() => {
+    // Add a new ride when route params change
+    if (route.params) {
+      const newRide = {
+        rideId: rideId, // Generate unique ID for the new ride
+        rideName: rideName,
+        rideDateTime: formatDate(rideDateTime),
+        selectedAddress: selectedAddress,
+        selectedDestinationAddress: selectedDestinationAddress,
+        yourName: yourName,
+        numberOfRiders: numberOfRiders,
+        selectedStartLatitude: selectedStartLatitude,
+        selectedStartLongitude: selectedStartLongitude,
+        selectedDestinationLatitude: selectedDestinationLatitude,
+        selectedDestinationLongitude: selectedDestinationLongitude,
+      };
+      setRides((prevRides) => [...prevRides, newRide]);
+    }
+  }, [route.params]); // Update rides data when specific route params change
   const confirmDelete = () => {
     setRides((prevRides) =>
       prevRides.filter((ride) => ride.id !== rideIdToDelete)
@@ -277,7 +319,7 @@ const MapViewComponent = ({ route }) => {
         </Marker>
       </MapView>
       <RideList rides={rides} onDeleteRide={handleDeleteRide} />
-      <ButtonContainer />
+      <ButtonContainer fetchDataById={fetchDataById} />
       <Modal
         animationType="slide"
         transparent={true}

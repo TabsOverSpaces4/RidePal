@@ -109,9 +109,8 @@ const MapviewNav = ({ route }) => {
     rideName,
     yourName,
     numberOfRiders,
-    startTime,
-    startingPoint,
-    destination,
+    selectedAddress,
+    selectedDestinationAddress,
     rideDateTime,
     selectedStartLatitude,
     selectedStartLongitude,
@@ -152,7 +151,7 @@ const MapviewNav = ({ route }) => {
       console.error("Fetch error:", error);
     }
   };
-  // console.log("rideid:", rideId);
+  console.log("rideid:", rideId);
   useEffect(async () => {
     const resp = await fetchDataById(rideId);
     console.log(resp.otherRiders);
@@ -275,7 +274,7 @@ const MapviewNav = ({ route }) => {
             <View style={styles.calloutContainer}>
               <CustomCallout
                 title="Starting Point"
-                subtitle={startingPoint}
+                subtitle={selectedAddress}
                 link="YOUR_LINK_HERE"
               />
             </View>
@@ -287,7 +286,7 @@ const MapviewNav = ({ route }) => {
             longitude: selectedDestinationLongitude,
           }}
           title={"Destination"}
-          description={destination}
+          description={selectedDestinationAddress}
           titleStyle={{ color: "blue", fontWeight: "bold" }}
           descriptionStyle={{ color: "gray" }}
           calloutContainerStyle={styles.calloutContainer}
@@ -302,7 +301,7 @@ const MapviewNav = ({ route }) => {
             <View style={styles.calloutContainer}>
               <CustomCallout
                 title="Destination"
-                subtitle={destination}
+                subtitle={selectedDestinationAddress}
                 link="YOUR_LINK_HERE"
               />
             </View>
@@ -330,9 +329,9 @@ const MapviewNav = ({ route }) => {
             <Text style={stylesModal.modalTitle}>Starting Point</Text>
             <View style={stylesModal.modalContent}>
               <Text style={stylesModal.modalLabel}>Start Time</Text>
-              <Text style={stylesModal.modalText}>{startTime}</Text>
+              <Text style={stylesModal.modalText}>{rideDateTime}</Text>
               <Text style={stylesModal.modalLabel}>Address</Text>
-              <Text style={stylesModal.modalText}>{startingPoint}</Text>
+              <Text style={stylesModal.modalText}>{selectedAddress}</Text>
             </View>
             <View style={stylesModal.buttonContainer}>
               <TouchableOpacity

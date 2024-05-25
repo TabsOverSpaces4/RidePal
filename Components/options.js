@@ -10,7 +10,7 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
 
-const ButtonContainer = () => {
+const ButtonContainer = ({ fetchDataById }) => {
   const navigation = useNavigation();
   const [isNewRideModalVisible, setIsNewRideModalVisible] = useState(false);
   const [isJoinRideModalVisible, setIsJoinRideModalVisible] = useState(false);
@@ -31,7 +31,6 @@ const ButtonContainer = () => {
   };
 
   const updateRideData = async (id, rider) => {
-    console.log("Func");
     try {
       const response = await fetch(`http://localhost:3000/data/${id}`, {
         method: "PUT",
@@ -52,22 +51,23 @@ const ButtonContainer = () => {
       }
     } catch (error) {
       console.error("Fetch error:", error);
-      return response.status(500);
+      return error.message;
     }
   };
+
   const handleJoinRidePress = () => {
     toggleJoinRideModal();
   };
+
   const handleJoinRideConfirm = async () => {
-    const joinRide = await updateRideData(rideName, yourName);
-    // if (joinRide.status == 200) {
-    console.log(joinRide);
+    const joinRideMessage = await updateRideData(rideName, yourName);
+    console.log(joinRideMessage);
+
+    // Fetch the updated ride data by RidePal code (rideName)
+    await fetchDataById(rideName);
+
     toggleJoinRideModal();
     console.log(yourName, rideName);
-    // } else {
-    // console.log("Failed");
-    // }
-    // navigation.navigate("MapviewNavigation")
   };
 
   const handlePlanRide = () => {
@@ -120,9 +120,7 @@ const ButtonContainer = () => {
             <Picker
               selectedValue={numberOfRiders}
               style={modalStyles.picker}
-              onValueChange={(itemValue, itemIndex) =>
-                setNumberOfRiders(itemValue)
-              }
+              onValueChange={(itemValue) => setNumberOfRiders(itemValue)}
             >
               {[...Array(29)].map((_, index) => (
                 <Picker.Item
@@ -196,12 +194,12 @@ const ButtonContainer = () => {
     </View>
   );
 };
+
 const modalStyles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    // marginTop: 22,
     backgroundColor: "rgba(0, 0, 0, 0.4)", // Semi-transparent background color
   },
   modalView: {
