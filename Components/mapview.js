@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import MapView, {
-  Callout,
-  Marker,
-  PROVIDER_GOOGLE,
-  CalloutSubview,
-} from "react-native-maps";
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import ButtonContainer from "./options";
 import {
   Image,
@@ -13,6 +8,8 @@ import {
   Modal,
   Text,
   TouchableOpacity,
+  Appearance,
+  useColorScheme,
 } from "react-native";
 import RideList from "./Scheduled";
 import CustomCallout from "./CustomCallout";
@@ -54,19 +51,7 @@ const MapViewComponent = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [rideIdToDelete, setRideIdToDelete] = useState(null);
 
-  // useEffect(() => {
-  //   // Effect to fetch rides data from server
-  //   const fetchRides = async () => {
-  //     try {
-  //       const response = await axios.get(config.mogoLink + "/Rides/Rides"); // Append the collection name to the MongoDB connection string
-  //       console.log("Rides:", response);
-  //     } catch (error) {
-  //       console.error("Error fetching rides:", error);
-  //     }
-  //   };
-
-  //   fetchRides(); // Call fetchRides function when component mounts
-  // }, []);
+  const colorScheme = 'dark'; // Detect system color scheme
 
   const {
     rideId,
@@ -84,10 +69,9 @@ const MapViewComponent = ({ route }) => {
   const [rides, setRides] = useState([]);
 
   useEffect(() => {
-    // Effect to update rides data when route params change
     if (route.params) {
       const newRide = {
-        rideId: rideId, // Generate unique ID for the new ride
+        rideId: rideId,
         rideName: rideName,
         rideDateTime: formatDate(rideDateTime),
         selectedAddress: selectedAddress,
@@ -99,8 +83,7 @@ const MapViewComponent = ({ route }) => {
         selectedDestinationLatitude: selectedDestinationLatitude,
         selectedDestinationLongitude: selectedDestinationLongitude,
       };
-      setRides((prevRides) => [...prevRides, newRide]); // Add new ride to rides state
-      console.log("Console IDDDDDD: ", rideId.insertedId);
+      setRides((prevRides) => [...prevRides, newRide]);
     }
   }, [
     rideName,
@@ -109,7 +92,8 @@ const MapViewComponent = ({ route }) => {
     selectedDestinationAddress,
     yourName,
     numberOfRiders,
-  ]); // Update rides data when specific route params change
+  ]);
+
   const handleDeleteRide = (id) => {
     setRideIdToDelete(id);
     setModalVisible(true);
@@ -151,8 +135,7 @@ const MapViewComponent = ({ route }) => {
       if (response.ok) {
         const data = await response.json();
         console.log("Fetched data:", data);
-        // Update rides state with fetched data
-        setRides((prevRides) => [...prevRides, data]); // Assuming the fetched data is an individual ride
+        setRides((prevRides) => [...prevRides, data]);
       } else {
         console.error(
           "Failed to fetch data",
@@ -166,120 +149,360 @@ const MapViewComponent = ({ route }) => {
   };
 
   useEffect(() => {
-    // Call fetchDataById when the component mounts
-    fetchDataById(rideId); // Replace 'yourId' with the appropriate ID
-  }, []); // Empty dependency array to run only once on mount
+    fetchDataById(rideId);
+  }, []);
 
-  useEffect(() => {
-    // Add a new ride when route params change
-    if (route.params) {
-      const newRide = {
-        rideId: rideId, // Generate unique ID for the new ride
-        rideName: rideName,
-        rideDateTime: formatDate(rideDateTime),
-        selectedAddress: selectedAddress,
-        selectedDestinationAddress: selectedDestinationAddress,
-        yourName: yourName,
-        numberOfRiders: numberOfRiders,
-        selectedStartLatitude: selectedStartLatitude,
-        selectedStartLongitude: selectedStartLongitude,
-        selectedDestinationLatitude: selectedDestinationLatitude,
-        selectedDestinationLongitude: selectedDestinationLongitude,
-      };
-      setRides((prevRides) => [...prevRides, newRide]);
-    }
-  }, [route.params]); // Update rides data when specific route params change
   const confirmDelete = () => {
     setRides((prevRides) =>
-      prevRides.filter((ride) => ride.id !== rideIdToDelete)
+      prevRides.filter((ride) => ride.rideId !== rideIdToDelete)
     );
     setModalVisible(false);
+    setRideIdToDelete(null);
   };
 
   const cancelDelete = () => {
     setModalVisible(false);
-    console.log("Deleted Ride");
+    setRideIdToDelete(null);
   };
-  const mapCustomStyle = [
-    { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
-    { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
-    { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+
+  const mapCustomStyle = colorScheme === 'dark' ? [
     {
-      featureType: "administrative.locality",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#d59563" }],
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#1d2c4d"
+        }
+      ]
     },
     {
-      featureType: "poi",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#d59563" }],
+      "elementType": "labels.text.fill",
+      "stylers": [
+        {
+          "color": "#8ec3b9"
+        }
+      ]
     },
     {
-      featureType: "poi.park",
-      elementType: "geometry",
-      stylers: [{ color: "#263c3f" }],
+      "elementType": "labels.text.stroke",
+      "stylers": [
+        {
+          "color": "#1a3646"
+        }
+      ]
     },
     {
-      featureType: "poi.park",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#6b9a76" }],
+      "featureType": "administrative",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
     },
     {
-      featureType: "road",
-      elementType: "geometry",
-      stylers: [{ color: "#38414e" }],
+      "featureType": "administrative.country",
+      "elementType": "geometry.stroke",
+      "stylers": [
+        {
+          "color": "#4b6878"
+        }
+      ]
     },
     {
-      featureType: "road",
-      elementType: "geometry.stroke",
-      stylers: [{ color: "#212a37" }],
+      "featureType": "administrative.land_parcel",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
     },
     {
-      featureType: "road",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#9ca5b3" }],
+      "featureType": "administrative.land_parcel",
+      "elementType": "labels.text.fill",
+      "stylers": [
+        {
+          "color": "#64779e"
+        }
+      ]
     },
     {
-      featureType: "road.highway",
-      elementType: "geometry",
-      stylers: [{ color: "#746855" }],
+      "featureType": "administrative.neighborhood",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
     },
     {
-      featureType: "road.highway",
-      elementType: "geometry.stroke",
-      stylers: [{ color: "#1f2835" }],
+      "featureType": "administrative.province",
+      "elementType": "geometry.stroke",
+      "stylers": [
+        {
+          "color": "#4b6878"
+        }
+      ]
     },
     {
-      featureType: "road.highway",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#f3d19c" }],
+      "featureType": "landscape.man_made",
+      "elementType": "geometry.stroke",
+      "stylers": [
+        {
+          "color": "#334e87"
+        }
+      ]
     },
     {
-      featureType: "transit",
-      elementType: "geometry",
-      stylers: [{ color: "#2f3948" }],
+      "featureType": "landscape.natural",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#023e58"
+        }
+      ]
     },
     {
-      featureType: "transit.station",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#d59563" }],
+      "featureType": "poi",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
     },
     {
-      featureType: "water",
-      elementType: "geometry",
-      stylers: [{ color: "#17263c" }],
+      "featureType": "poi",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#283d6a"
+        }
+      ]
     },
     {
-      featureType: "water",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#515c6d" }],
+      "featureType": "poi",
+      "elementType": "labels.text",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
     },
     {
-      featureType: "water",
-      elementType: "labels.text.stroke",
-      stylers: [{ color: "#17263c" }],
+      "featureType": "poi",
+      "elementType": "labels.text.fill",
+      "stylers": [
+        {
+          "color": "#6f9ba5"
+        }
+      ]
     },
-  ];
+    {
+      "featureType": "poi",
+      "elementType": "labels.text.stroke",
+      "stylers": [
+        {
+          "color": "#1d2c4d"
+        }
+      ]
+    },
+    {
+      "featureType": "poi.park",
+      "elementType": "geometry.fill",
+      "stylers": [
+        {
+          "color": "#023e58"
+        }
+      ]
+    },
+    {
+      "featureType": "poi.park",
+      "elementType": "labels.text.fill",
+      "stylers": [
+        {
+          "color": "#3C7680"
+        }
+      ]
+    },
+    {
+      "featureType": "road",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#304a7d"
+        }
+      ]
+    },
+    {
+      "featureType": "road",
+      "elementType": "labels",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "road",
+      "elementType": "labels.icon",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "road",
+      "elementType": "labels.text.fill",
+      "stylers": [
+        {
+          "color": "#98a5be"
+        }
+      ]
+    },
+    {
+      "featureType": "road",
+      "elementType": "labels.text.stroke",
+      "stylers": [
+        {
+          "color": "#1d2c4d"
+        }
+      ]
+    },
+    {
+      "featureType": "road.arterial",
+      "elementType": "labels",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "road.highway",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#2c6675"
+        }
+      ]
+    },
+    {
+      "featureType": "road.highway",
+      "elementType": "geometry.stroke",
+      "stylers": [
+        {
+          "color": "#255763"
+        }
+      ]
+    },
+    {
+      "featureType": "road.highway",
+      "elementType": "labels",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "road.highway",
+      "elementType": "labels.text.fill",
+      "stylers": [
+        {
+          "color": "#b0d5ce"
+        }
+      ]
+    },
+    {
+      "featureType": "road.highway",
+      "elementType": "labels.text.stroke",
+      "stylers": [
+        {
+          "color": "#023e58"
+        }
+      ]
+    },
+    {
+      "featureType": "road.local",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "transit",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "transit",
+      "elementType": "labels.text.fill",
+      "stylers": [
+        {
+          "color": "#98a5be"
+        }
+      ]
+    },
+    {
+      "featureType": "transit",
+      "elementType": "labels.text.stroke",
+      "stylers": [
+        {
+          "color": "#1d2c4d"
+        }
+      ]
+    },
+    {
+      "featureType": "transit.line",
+      "elementType": "geometry.fill",
+      "stylers": [
+        {
+          "color": "#283d6a"
+        }
+      ]
+    },
+    {
+      "featureType": "transit.station",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#3a4762"
+        }
+      ]
+    },
+    {
+      "featureType": "water",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#0e1626"
+        }
+      ]
+    },
+    {
+      "featureType": "water",
+      "elementType": "labels.text",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "water",
+      "elementType": "labels.text.fill",
+      "stylers": [
+        {
+          "color": "#4e6d70"
+        }
+      ]
+    }
+    
+    
+  ] : [];
 
   const onCalloutPressed = () => {
     console.log("pressed");
@@ -288,12 +511,10 @@ const MapViewComponent = ({ route }) => {
   return (
     <View style={styles.container}>
       <MapView
-        use
-        customMapStyle={mapCustomStyle}
-        provider="google"
+        provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
         followsUserLocation={true}
-        userInterfaceStyle="dark"
+        customMapStyle={mapCustomStyle}
         style={styles.map}
         initialRegion={{
           latitude: desiredCoordinates.latitude,
@@ -333,7 +554,6 @@ const MapViewComponent = ({ route }) => {
             <Text style={styles.modalTitle}>
               Are you sure you want to delete this ride?
             </Text>
-
             <View style={styles.buttonContainer}>
               <TouchableOpacity style={styles.button} onPress={confirmDelete}>
                 <Text style={styles.buttonText}>Confirm</Text>
@@ -355,45 +575,31 @@ const MapViewComponent = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: "relative", // Ensure RideList and MapView are positioned relative to container
+    position: "relative",
   },
   map: {
-    flex: 1, // Adjusted to occupy remaining space after RideList
-    ...StyleSheet.absoluteFillObject, // Ensure MapView covers the entire container
+    flex: 1,
+    ...StyleSheet.absoluteFillObject,
   },
   modalBackground: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
   },
   modalContainer: {
-    backgroundColor: "#242e4c", // Dark background
+    backgroundColor: "#242e4c",
     borderRadius: 20,
     padding: 20,
-    width: "80%", // 80% of the screen width
-    elevation: 5, // Add elevation for a shadow effect
+    width: "80%",
+    elevation: 5,
   },
   modalTitle: {
     fontSize: 24,
     marginBottom: 30,
-    color: "#f0f0f0", // Light text color
+    color: "#f0f0f0",
     textAlign: "center",
   },
-  modalContent: {
-    marginBottom: 20,
-  },
-  modalLabel: {
-    fontSize: 18,
-    color: "#f0f0f0", // Light text color
-    marginBottom: 5,
-  },
-  modalText: {
-    fontSize: 16,
-    color: "#CCCCCC", // Lighter text color
-    marginBottom: 10,
-  },
-
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -403,7 +609,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f09142",
     borderRadius: 25,
     paddingVertical: 12,
-    width: "100%", // Adjust as needed based on your preference
+    width: "100%",
   },
   buttonText: {
     fontSize: 18,
@@ -411,19 +617,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   cancelButton: {
-    // backgroundColor: 'rgba(255, 0, 0, 0.6)', // Adjust the color as needed
     borderRadius: 10,
     paddingVertical: 5,
-    // height:,
   },
   cancelButtonText: {
     fontSize: 16,
     color: "#f09142",
     textAlign: "center",
   },
-  calloutContainer: {
-    backgroundColor: "transparent",
-  },
 });
 
 export default MapViewComponent;
+//665011b9eb739e5216f71cd2

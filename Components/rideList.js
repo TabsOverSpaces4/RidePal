@@ -37,7 +37,7 @@ const LocationList = ({ data, onToggleFocus }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "rgba(55, 71, 91, 0.8)",
+    backgroundColor: "rgba(22, 33, 62, 0.9)",
     width: "100%",
     height: "30%",
     position: "absolute",

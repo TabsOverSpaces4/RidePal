@@ -7,6 +7,7 @@ import {
   Image,
   Modal,
   TouchableOpacity,
+  Share,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -41,13 +42,11 @@ function formatDate(dateTimeString) {
 const RideList = ({ rides, onDeleteRide }) => {
   const [selectedRide, setSelectedRide] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [rideData, setRideData] = useState(rides);
   const navigation = useNavigation();
 
   const renderRideItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleRidePress(item)}>
       <View style={styles.rideItem}>
-        {/* Left side: ride details */}
         <View style={styles.leftContainer}>
           <Text style={styles.rideName}>{item.rideName}</Text>
           <View style={styles.rideInfoContainer}>
@@ -77,7 +76,6 @@ const RideList = ({ rides, onDeleteRide }) => {
             </Text>
           </View>
         </View>
-        {/* Right side: yourName, numberOfRiders, and image */}
         <View style={styles.rightContainer}>
           <Image
             source={require("../assets/helmet.png")}
@@ -85,10 +83,10 @@ const RideList = ({ rides, onDeleteRide }) => {
           />
           <Text
             style={styles.additionalText}
-          >{`yourName: ${item.yourName}`}</Text>
+          >{`Admin: ${item.yourName}`}</Text>
           <Text
             style={styles.additionalText}
-          >{`numberOfRiders: ${item.numberOfRiders}`}</Text>
+          >{`Riders: ${item.numberOfRiders}`}</Text>
           <TouchableOpacity onPress={() => onDeleteRide(item.id)}>
             <Image
               source={require("../assets/trash.png")}
@@ -150,8 +148,38 @@ const RideList = ({ rides, onDeleteRide }) => {
     setModalVisible(false);
   };
 
+  const shareRide = async () => {
+    try {
+      const result = await Share.share({
+        message: `Join my ride: ${selectedRide.rideName} from ${
+          selectedRide.selectedAddress
+        } to ${selectedRide.selectedDestinationAddress} at ${formatDate(
+          selectedRide.rideDateTime
+        )}. Enter the following code to join this ride: ${selectedRide.rideId}`,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log("Shared with activity type: " + result.activityType);
+        } else {
+          console.log("Shared successfully");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log("Share dismissed");
+      }
+    } catch (error) {
+      console.error("Error sharing ride: ", error.message);
+    }
+  };
+
+  const navigateToSettings = () => {
+    navigation.navigate("Settings"); // Ensure you have a screen named "Settings" in your navigation stack
+  };
+
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={styles.settingsButton} onPress={navigateToSettings}>
+        <Image source={require("../assets/settings.png")} style={styles.settingsIcon} />
+      </TouchableOpacity>
       <Text style={styles.title}>Scheduled Rides</Text>
       {rides.length === 0 ? (
         <Text style={styles.noRidesText}>
@@ -196,6 +224,9 @@ const RideList = ({ rides, onDeleteRide }) => {
               <TouchableOpacity style={styles.button} onPress={rideNow}>
                 <Text style={styles.buttonText}>Start Now</Text>
               </TouchableOpacity>
+              <TouchableOpacity style={styles.shareButton} onPress={shareRide}>
+                <Text style={styles.buttonText}>Share</Text>
+              </TouchableOpacity>
             </View>
             <TouchableOpacity style={styles.cancelButton} onPress={closeModal}>
               <Text style={styles.cancelButtonText}>Cancel</Text>
@@ -210,7 +241,7 @@ const RideList = ({ rides, onDeleteRide }) => {
 const styles = StyleSheet.create({
   container: {
     maxHeight: "27%",
-    backgroundColor: "rgba(55, 71, 91, 0.8)",
+    backgroundColor: "rgba(22, 33, 62, 0.8)",
     padding: 15,
     borderRadius: 10,
     margin: 10,
@@ -223,6 +254,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  settingsButton: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+    zIndex: 1,
+  },
+  settingsIcon: {
+    width: 30,
+    height: 30,
+    tintColor: "#ffffff",
   },
   title: {
     fontSize: 20,
@@ -286,7 +328,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalContainer: {
-    backgroundColor: "#242e4c", // Dark background
+    backgroundColor: "#16213E", // Dark background
     borderRadius: 20,
     padding: 20,
     width: "80%", // 80% of the screen width
@@ -312,32 +354,37 @@ const styles = StyleSheet.create({
     color: "#CCCCCC", // Lighter text color
     marginBottom: 10,
   },
-
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 15,
   },
   button: {
-    backgroundColor: "#f09142",
+    backgroundColor: "#F05454",
     borderRadius: 25,
     paddingVertical: 12,
-    width: "100%", // Adjust as needed based on your preference
+    width: "48%",
+    alignItems: "center",
+  },
+  shareButton: {
+    backgroundColor: "#F0A254",
+    borderRadius: 25,
+    paddingVertical: 12,
+    width: "48%",
+    alignItems: "center",
   },
   buttonText: {
     fontSize: 18,
     color: "#ffffff",
-    textAlign: "center",
   },
   cancelButton: {
-    // backgroundColor: 'rgba(255, 0, 0, 0.6)', // Adjust the color as needed
     borderRadius: 10,
     paddingVertical: 5,
-    // height:,
+    alignItems: "center",
   },
   cancelButtonText: {
     fontSize: 16,
-    color: "#f09142",
+    color: "#F05454",
     textAlign: "center",
   },
 });

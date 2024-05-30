@@ -203,7 +203,7 @@ const modalStyles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.4)", // Semi-transparent background color
   },
   modalView: {
-    backgroundColor: "#242e4c",
+    backgroundColor: "#16213E", // Background color
     borderRadius: 20,
     padding: 20,
     alignItems: "center",
@@ -218,25 +218,25 @@ const modalStyles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 24,
-    color: "white",
+    color: "#E7F6F2", // Text color
     fontWeight: "bold",
     marginBottom: 20,
   },
   modalLabel: {
     fontSize: 19,
-    color: "white",
+    color: "#E7F6F2", // Text color
     marginBottom: 5,
   },
   input: {
     fontSize: 16,
     height: 40,
-    borderColor: "#f09142",
+    borderColor: "#F05454", // Border color
     borderRadius: 20,
     borderWidth: 2,
     marginBottom: 20,
     paddingHorizontal: 10,
     width: "100%",
-    color: "white",
+    color: "#E7F6F2", // Text color
   },
   picker: {
     height: 200,
@@ -252,10 +252,10 @@ const modalStyles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: "#f09142",
+    backgroundColor: "#F05454", // Button color
   },
   modalButtonText: {
-    color: "white",
+    color: "#E7F6F2", // Text color
     fontWeight: "bold",
   },
 });
@@ -263,20 +263,27 @@ const modalStyles = StyleSheet.create({
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    bottom: 0,
+    bottom: -1,
     left: 0,
     right: 0,
-    height: 100,
+    height: "11%",
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    backgroundColor: "rgba(55, 71, 91, 0.9)",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    backgroundColor: "#16213E", // Background color
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   button: {
+    height: "50%",
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 10,
@@ -284,16 +291,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonText: {
-    color: "white",
-    fontSize: 16,
+    color: "#E7F6F2", // Text color
+    fontSize: 20,
     fontWeight: "bold",
   },
   newRideButton: {
-    backgroundColor: "#f09142",
+    backgroundColor: "#F05454",
   },
   joinRideButton: {
-    backgroundColor: "#42bcf0",
+    backgroundColor: "transparent",
+    borderWidth: 2,
+    borderColor: '#F05454'
   },
 });
+
 
 export default ButtonContainer;
