@@ -10,6 +10,8 @@ import {
   Share,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "../ThemeContext";
+import { darkStyles, lightStyles } from "../themes";
 
 function formatDate(dateTimeString) {
   const dateTime = new Date(dateTimeString);
@@ -43,6 +45,161 @@ const RideList = ({ rides, onDeleteRide }) => {
   const [selectedRide, setSelectedRide] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
+  const { isDarkTheme, toggleTheme } = useTheme();
+  const themeStyles = isDarkTheme ? darkStyles : lightStyles;
+
+  const styles = StyleSheet.create({
+    container: {
+      maxHeight: "27%",
+      backgroundColor: isDarkTheme
+        ? "rgba(22, 33, 62, 0.8)"
+        : "rgba(255, 250, 230, 0.8)",
+      padding: 15,
+      borderRadius: 10,
+      margin: 10,
+      marginTop: 65,
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+    },
+    settingsButton: {
+      position: "absolute",
+      top: 10,
+      left: 10,
+      zIndex: 1,
+    },
+    settingsIcon: {
+      width: 30,
+      height: 30,
+      tintColor: isDarkTheme ? "#ffffff" : "#e76930",
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: "bold",
+      marginBottom: 15,
+      color: isDarkTheme ? "#ffffff" : "#272721",
+      textAlign: "center",
+    },
+    rideItem: {
+      flexDirection: "row",
+      marginBottom: 15,
+    },
+    leftContainer: {
+      flex: 1,
+      paddingRight: 10,
+    },
+    rightContainer: {
+      alignItems: "flex-end",
+    },
+    rideName: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: isDarkTheme ? "#ffffff" : "#272721",
+      marginBottom: 5,
+    },
+    rideInfoContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 5,
+    },
+    label: {
+      fontSize: 14,
+      color: isDarkTheme ? "#9ca5b3" : "#272721",
+      marginRight: 5,
+    },
+    rideInfo: {
+      fontSize: 14,
+      color: isDarkTheme ? "#ffffff" : "#4c4c47",
+      flexShrink: 1,
+    },
+    additionalText: {
+      fontSize: 14,
+      color: isDarkTheme ? "#9ca5b3" : "#4c4c47",
+      marginBottom: 5,
+    },
+    image: {
+      tintColor: isDarkTheme ? "#CCCCCC" : "#272721",
+      width: 40,
+      height: 30,
+      marginBottom: 10,
+    },
+    noRidesText: {
+      color: isDarkTheme ? "#bdbdbd" : "#8b8b87",
+      fontSize: 16,
+      textAlign: "center",
+    },
+    modalBackground: {
+      flex: 1,
+      backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    modalContainer: {
+      backgroundColor: isDarkTheme ? "#16213E" : "#dadbb9", // Dark background
+      borderRadius: 20,
+      padding: 20,
+      width: "80%", // 80% of the screen width
+      elevation: 5, // Add elevation for a shadow effect
+    },
+    modalTitle: {
+      fontSize: 24,
+      fontWeight: "bold",
+      marginBottom: 20,
+      color: isDarkTheme ? "#E7F6F2" : "#272721", // Text color
+      textAlign: "center",
+    },
+    modalContent: {
+      marginBottom: 20,
+    },
+    modalLabel: {
+      fontSize: 18,
+      color: isDarkTheme ? "#E7F6F2" : "#272721", // Text color
+      marginBottom: 5,
+    },
+    modalText: {
+      fontSize: 16,
+      color: isDarkTheme ? "#ffffff" : "#4c4c47",
+      marginBottom: 10,
+    },
+    buttonContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginBottom: 15,
+    },
+    button: {
+      backgroundColor: "#F05454",
+      borderRadius: 25,
+      paddingVertical: 12,
+      width: "48%",
+      alignItems: "center",
+    },
+    shareButton: {
+      backgroundColor: "#F0A254",
+      borderRadius: 25,
+      paddingVertical: 12,
+      width: "48%",
+      alignItems: "center",
+    },
+    buttonText: {
+      fontSize: 18,
+      color: "#ffffff",
+    },
+    cancelButton: {
+      borderRadius: 10,
+      paddingVertical: 5,
+      alignItems: "center",
+    },
+    cancelButtonText: {
+      fontSize: 16,
+      color: "#F05454",
+      textAlign: "center",
+    },
+  });
 
   const renderRideItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleRidePress(item)}>
@@ -81,9 +238,7 @@ const RideList = ({ rides, onDeleteRide }) => {
             source={require("../assets/helmet.png")}
             style={styles.image}
           />
-          <Text
-            style={styles.additionalText}
-          >{`Admin: ${item.yourName}`}</Text>
+          <Text style={styles.additionalText}>{`Admin: ${item.yourName}`}</Text>
           <Text
             style={styles.additionalText}
           >{`Riders: ${item.numberOfRiders}`}</Text>
@@ -177,8 +332,14 @@ const RideList = ({ rides, onDeleteRide }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.settingsButton} onPress={navigateToSettings}>
-        <Image source={require("../assets/settings.png")} style={styles.settingsIcon} />
+      <TouchableOpacity
+        style={styles.settingsButton}
+        onPress={navigateToSettings}
+      >
+        <Image
+          source={require("../assets/settings.png")}
+          style={styles.settingsIcon}
+        />
       </TouchableOpacity>
       <Text style={styles.title}>Scheduled Rides</Text>
       {rides.length === 0 ? (
@@ -237,156 +398,5 @@ const RideList = ({ rides, onDeleteRide }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    maxHeight: "27%",
-    backgroundColor: "rgba(22, 33, 62, 0.8)",
-    padding: 15,
-    borderRadius: 10,
-    margin: 10,
-    marginTop: 65,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  settingsButton: {
-    position: "absolute",
-    top: 10,
-    left: 10,
-    zIndex: 1,
-  },
-  settingsIcon: {
-    width: 30,
-    height: 30,
-    tintColor: "#ffffff",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 15,
-    color: "#ffffff",
-    textAlign: "center",
-  },
-  rideItem: {
-    flexDirection: "row",
-    marginBottom: 15,
-  },
-  leftContainer: {
-    flex: 1,
-    paddingRight: 10,
-  },
-  rightContainer: {
-    alignItems: "flex-end",
-  },
-  rideName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#ffffff",
-    marginBottom: 5,
-  },
-  rideInfoContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 5,
-  },
-  label: {
-    fontSize: 14,
-    color: "#9ca5b3",
-    marginRight: 5,
-  },
-  rideInfo: {
-    fontSize: 14,
-    color: "#ffffff",
-    flexShrink: 1,
-  },
-  additionalText: {
-    fontSize: 14,
-    color: "#9ca5b3",
-    marginBottom: 5,
-  },
-  image: {
-    tintColor: "#CCCCCC",
-    width: 40,
-    height: 30,
-    marginBottom: 10,
-  },
-  noRidesText: {
-    color: "#bdbdbd",
-    fontSize: 16,
-    textAlign: "center",
-  },
-  modalBackground: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContainer: {
-    backgroundColor: "#16213E", // Dark background
-    borderRadius: 20,
-    padding: 20,
-    width: "80%", // 80% of the screen width
-    elevation: 5, // Add elevation for a shadow effect
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#f0f0f0", // Light text color
-    textAlign: "center",
-  },
-  modalContent: {
-    marginBottom: 20,
-  },
-  modalLabel: {
-    fontSize: 18,
-    color: "#f0f0f0", // Light text color
-    marginBottom: 5,
-  },
-  modalText: {
-    fontSize: 16,
-    color: "#CCCCCC", // Lighter text color
-    marginBottom: 10,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 15,
-  },
-  button: {
-    backgroundColor: "#F05454",
-    borderRadius: 25,
-    paddingVertical: 12,
-    width: "48%",
-    alignItems: "center",
-  },
-  shareButton: {
-    backgroundColor: "#F0A254",
-    borderRadius: 25,
-    paddingVertical: 12,
-    width: "48%",
-    alignItems: "center",
-  },
-  buttonText: {
-    fontSize: 18,
-    color: "#ffffff",
-  },
-  cancelButton: {
-    borderRadius: 10,
-    paddingVertical: 5,
-    alignItems: "center",
-  },
-  cancelButtonText: {
-    fontSize: 16,
-    color: "#F05454",
-    textAlign: "center",
-  },
-});
 
 export default RideList;

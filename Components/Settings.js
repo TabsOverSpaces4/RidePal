@@ -6,6 +6,7 @@ import {
   Caption,
   Switch as PaperSwitch,
   TouchableRipple,
+  Divider,
 } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
@@ -24,7 +25,7 @@ const SettingsScreen = () => {
   const styles = isDarkTheme ? darkStyles : lightStyles;
 
   return (
-    <SafeAreaView style={[styles.safeArea, { paddingTop: insets.top }]}>
+    <SafeAreaView style={[styles.safeArea]}>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -66,6 +67,11 @@ const SettingsScreen = () => {
             <Text style={styles.rideScoreText}>Ride Score: 85</Text>
           </View>
         </View>
+        <View style={styles.dividerContainer}>
+          <Divider style={styles.divider} />
+          <Text style={styles.dividerText}>Preferences</Text>
+          <Divider style={styles.divider} />
+        </View>
 
         <View style={styles.menuWrapper}>
           <TouchableRipple onPress={() => {}}>
@@ -79,6 +85,51 @@ const SettingsScreen = () => {
                 <Text style={styles.menuItemText}>Dark Mode</Text>
                 <PaperSwitch value={isDarkTheme} onValueChange={toggleTheme} />
               </View>
+            </View>
+          </TouchableRipple>
+
+          <TouchableRipple
+            onPress={() => {
+              /* Handle About Us action */
+            }}
+          >
+            <View style={styles.menuItem}>
+              <Icon
+                name="information-outline"
+                color={isDarkTheme ? "#ffffff" : "#000000"}
+                size={25}
+              />
+              <Text style={styles.menuItemText}>About Us</Text>
+            </View>
+          </TouchableRipple>
+
+          <TouchableRipple
+            onPress={() => {
+              /* Handle Delete Account action */
+            }}
+          >
+            <View style={styles.menuItem}>
+              <Icon
+                name="account-remove-outline"
+                color={isDarkTheme ? "#ffffff" : "#000000"}
+                size={25}
+              />
+              <Text style={styles.menuItemText}>Delete Account</Text>
+            </View>
+          </TouchableRipple>
+
+          <TouchableRipple
+            onPress={() => {
+              /* Handle Log out action */
+            }}
+          >
+            <View style={styles.menuItem}>
+              <Icon
+                name="logout"
+                color={isDarkTheme ? "#ffffff" : "#000000"}
+                size={25}
+              />
+              <Text style={styles.menuItemText}>Log out</Text>
             </View>
           </TouchableRipple>
         </View>
